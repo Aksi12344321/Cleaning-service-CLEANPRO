@@ -1,0 +1,382 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+
+
+// Базовые стили попапа
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+
+    &--active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    &__overlay {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+    }
+
+    &__content {
+        position: relative;
+        background: $c-white;
+        border-radius: 20px;
+        padding: 40px 30px;
+        max-width: 580px; // Чуть шире для экрана успеха
+        width: 100%;
+        max-height: 95vh;
+        overflow-y: auto;
+        transform: translateY(30px) scale(0.95);
+        transition: transform 0.3s ease;
+        
+        .modal--active & {
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    &__close {
+        position: absolute;
+        top: 15px; right: 15px;
+        background: none; border: none;
+        color: $c-text-muted; cursor: pointer;
+        transition: color 0.3s;
+        z-index: 10;
+        &:hover { color: $c-text; }
+    }
+
+    &__title {
+        font-size: 24px; font-weight: 700;
+        margin-bottom: 10px; text-align: center;
+    }
+
+    &__subtitle {
+        font-size: 15px; color: $c-text-muted;
+        margin-bottom: 30px; text-align: center;
+    }
+}
+
+// --- ФОРМА ---
+.form {
+    display: flex; flex-direction: column; gap: 15px;
+
+    &__input, &__textarea {
+        width: 100%; padding: 14px 18px;
+        border: 1px solid $c-border; border-radius: 12px;
+        font-family: $font-main; font-size: 15px;
+        color: $c-text; outline: none;
+        transition: border-color 0.3s;
+        &::placeholder { color: #94a3b8; }
+        &:focus { border-color: $c-primary; }
+    }
+    &__textarea { resize: vertical; min-height: 100px; }
+    &__btn { width: 100%; margin-top: 10px; }
+}
+
+
+// --- ЭКРАН УСПЕХА (ПО РЕФЕРЕНСУ) ---
+.modal__success {
+    display: none;
+    position: relative;
+    
+    &--active { display: block; }
+
+    // Декоративные листья
+    .modal__leaf {
+        position: absolute;
+        z-index: 0;
+        pointer-events: none;
+        &--left { top: -10px; left: -20px; transform: rotate(-15deg); }
+        &--right { bottom: 40px; right: -15px; transform: rotate(20deg); }
+    }
+
+    // Сетка: Текст | Визуал
+    .modal__success-grid {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+
+        @include mq($bp-sm) { flex-direction: column; text-align: center; }
+    }
+
+    .modal__success-info {
+        flex: 1;
+    }
+
+    .modal__success-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: $c-text;
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .modal__success-text {
+        font-size: 15px;
+        color: $c-text-muted;
+        line-height: 1.5;
+    }
+
+    .modal__promo-highlight {
+        color: $c-primary;
+        font-weight: 700;
+    }
+
+    // Визуал: Книга и наклейка
+    .modal__success-visual {
+        position: relative;
+        flex: 0 0 140px;
+        height: 160px;
+        
+        @include mq($bp-sm) { margin: 0 auto; }
+    }
+
+    // 3D Книга
+    .modal__book {
+        position: absolute;
+        left: 0; bottom: 0;
+        width: 110px; height: 150px;
+        background: linear-gradient(135deg, #60a5fa 0%, $c-primary 100%);
+        border-radius: 4px 12px 12px 4px;
+        box-shadow: 5px 5px 15px rgba($c-primary, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: rotate(-5deg);
+    }
+
+    // Корешок книги для объема
+    .modal__book-spine {
+        position: absolute;
+        left: 0; top: 0;
+        width: 12px; height: 100%;
+        background: rgba(0,0,0,0.15);
+        border-radius: 4px 0 0 4px;
+    }
+
+    .modal__book-title {
+        color: $c-white;
+        font-weight: 800;
+        font-size: 13px;
+        text-align: center;
+        line-height: 1.2;
+        padding-left: 5px;
+    }
+
+    // Желтая наклейка
+    .modal__sticker {
+        position: absolute;
+        right: 0; top: 0;
+        background: #ffca28; // Цвет sticky note
+        padding: 12px 15px;
+        border-radius: 2px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        transform: rotate(5deg);
+        width: 110px;
+        
+        p {
+            font-size: 9px;
+            color: #1e293b;
+            line-height: 1.3;
+            margin-bottom: 5px;
+            b { color: #b45309; }
+        }
+    }
+
+    .modal__sticker-badge {
+        position: absolute;
+        top: -10px; right: -10px;
+        background: #ef4444;
+        color: white;
+        font-weight: 800;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    // Кнопки
+    .modal__success-actions {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+
+        @include mq($bp-sm) { flex-direction: column; }
+    }
+
+    .btn--wa {
+        background-color: #25D366; // Официальный зеленый WhatsApp
+        color: $c-white;
+        font-weight: 700;
+        font-size: 13px;
+        box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        &:hover { background-color: #1da851; transform: translateY(-2px); }
+    }
+
+    .btn--site {
+        background-color: #F97316; // Оранжевый
+        color: $c-white;
+        font-weight: 700;
+        font-size: 13px;
+        box-shadow: 0 5px 15px rgba(249, 115, 22, 0.3);
+        &:hover { background-color: #ea580c; transform: translateY(-2px); }
+    }
+
+    // Подвал
+    .modal__success-footer {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid $c-border;
+        padding-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: #94a3b8;
+        
+        a { 
+            color: #94a3b8; 
+            text-decoration: underline; 
+            &:hover { color: $c-text; }
+        }
+    }
+}
+
+// --- ЧЕКБОКСЫ СОГЛАСИЯ ---
+.form {
+    // ... предыдущие стили input/textarea оставь как есть ...
+
+    &__consents {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    &__checkbox-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 13px;
+        color: $c-text-muted;
+        cursor: pointer;
+        line-height: 1.4;
+        
+        // Прячем стандартный системный чекбокс
+        .form__checkbox {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        // Рисуем свою кастомную галочку
+        .form__checkbox-custom {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            border: 2px solid $c-border;
+            border-radius: 4px;
+            margin-top: 1px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        // Стиль ссылки в тексте
+        a {
+            color: $c-primary;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            &:hover { color: $c-primary, 10%; }
+        }
+
+        // Когда чекбокс нажат (используем смежный селектор ~)
+        .form__checkbox:checked ~ .form__checkbox-custom {
+            background-color: $c-primary;
+            border-color: $c-primary;
+        }
+
+        // Рисуем саму галочку внутри квадрата через псевдоэлемент
+        .form__checkbox:checked ~ .form__checkbox-custom::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 0px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+    }
+}
+
+// --- СОСТОЯНИЯ ОШИБОК ВАЛИДАЦИИ ---
+.form {
+    
+    // Обертка поля в состоянии ошибки
+    &__group--error {
+        .form__input, .form__textarea {
+            border-color: #fca5a5; // Бледно-красная рамка
+            background-color: #fef2f2; // Бледно-красный фон
+            &:focus {
+                border-color: #f87171;
+            }
+        }
+    }
+
+    // Текст ошибки под полем
+    &__error {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: #ef4444; // Ярко-красный текст
+        margin-top: 6px;
+        animation: shake 0.3s ease; // Легкая тряска при появлении
+    }
+
+    // Ошибка у чекбокса
+    &__checkbox-label--error {
+        color: #ef4444;
+        .form__checkbox-custom {
+            border-color: #fca5a5;
+            background-color: #fef2f2;
+        }
+    }
+}
+
+// Анимация "тряски" для текста ошибки
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+button[disabled],
+.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}

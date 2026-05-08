@@ -1,0 +1,95 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.header {
+    padding: 20px 0;
+    background-color: $c-white;
+    position: relative;
+    z-index: 10;
+    background-color: $c-bg-light;
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: $c-text;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: -0.5px;
+
+        img { 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 10px;
+        }
+    }
+
+    &__contacts {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+
+        @include mq($bp-md) { gap: 15px; }
+    }
+
+    &__phone {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+
+        a {
+            color: $c-text;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 17px;
+            letter-spacing: -0.3px;
+        }
+        span {
+            font-size: 12px;
+            color: $c-text-muted;
+            font-weight: 500;
+        }
+
+        @include mq($bp-sm) { display: none; }
+    }
+
+        &__socials {
+        display: flex;
+        gap: 10px;
+    }
+
+    &__social {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: $c-bg-light; // Серый/светло-синий фон по умолчанию
+        color: $c-primary;       // <-- ЗДЕСЬ мы задаем цвет иконке (она становится синей)
+        text-decoration: none;
+        transition: all 0.3s ease;
+        
+        svg {
+            display: block;
+        }
+
+        // --- МАГИЯ ХОВЕРА ---
+        &:hover {
+            background: $c-primary; // Кружок становится синим
+            color: $c-white;        // <-- Мы изменили color на белый, и иконка внутри ТОЖЕ СТАНОВИТСЯ БЕЛОЙ благодаря currentColor!
+            transform: translateY(-3px); // Легкий подъем вверх
+            box-shadow: 0 5px 15px rgba($c-primary, 0.4); // Синяя тень для объема
+        }
+    }
+    &__btn {
+        @include mq($bp-md) { display: none; }
+    }
+}

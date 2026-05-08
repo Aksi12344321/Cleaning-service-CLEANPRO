@@ -1,0 +1,124 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.hero {
+    position: relative;
+    padding: 60px 0 140px;
+    z-index: 1;
+
+    /* Сложный изогнутый фон на всю ширину */
+    &__bg-wave {
+        position: absolute;
+        top: -15%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 110%;
+        height: 120%;
+        background-color: $c-bg-light;
+        border-radius: 0 0 50% 50%;
+        z-index: -1;
+
+        @include mq($bp-lg) { 
+            width: 120%; 
+            height: 110%;
+        }
+        @include mq($bp-sm) { 
+            width: 130%;
+            border-radius: 0 0 30% 30%; 
+        }
+    }
+
+    &__container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 60px;
+
+        @include mq($bp-lg) {
+            flex-direction: column;
+            text-align: center;
+            gap: 40px;
+        }
+    }
+
+    &__content {
+      
+
+         @include mq($bp-lg) {
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+    }
+
+ &__title {
+    // Стили которые остаются без изменений
+    font-weight: 800;
+    line-height: 1.2; // Можно также сделать плавным, если нужно
+    margin-bottom: 24px;
+    color: $c-text;
+    letter-spacing: -0.5px;
+
+    span { 
+        color: $c-primary; 
+    }
+
+    // ПЛАВНЫЙ АДАПТИВ:
+    // Мы задаем: от 26px (на мобилке) до 44px (на десктопе)
+    // Ширины вьюпорта можно настроить под ваши брейкпоинты (375px по умолчанию, и 1200px где рост останавливается)
+    @include fluid-font(26px, 44px, 375px, 1200px);
+}
+
+    &__subtitle {
+        font-size: 17px;
+        color: $c-text-muted; // Цвет 4B5258 из ТЗ
+        margin-bottom: 40px;
+        font-weight: 500;
+        line-height: 1.6;
+
+        @include fluid-font(16px, 14px);
+    }
+
+    &__actions {
+        display: flex;
+        gap: 20px;
+
+        @include mq($bp-lg) { justify-content: center; }
+        @include mq($bp-sm) {
+            flex-direction: column;
+            width: 100%;
+            .btn { width: 100%; }
+        }
+    }
+
+    &__image-wrapper {
+        position: relative;
+        
+
+        @include mq($bp-lg) { 
+            width: 100%; 
+            max-width: 450px; 
+        }
+    }
+
+    &__image {
+        width: 100%;
+        height: auto;
+        /* Скругление как на референсе (овальная форма) */
+        border-radius: 180px 180px 40px 40px; 
+        /* Эффект размытого фона достигается за счет мягкой тени под картинкой */
+        box-shadow: 0 30px 80px rgba(67, 170, 255, 0.2);
+        object-fit: cover;
+        transform: translateY(20px); // Немного опускаем для эстетики
+
+        @include mq($bp-lg) { 
+            border-radius: 120px 120px 30px 30px;
+            transform: translateY(0); 
+        }
+        @include mq($bp-sm) { 
+            border-radius: 80px 80px 20px 20px; 
+        }
+    }
+}

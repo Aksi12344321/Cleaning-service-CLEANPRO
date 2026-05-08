@@ -1,0 +1,181 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+
+.nav-menu {
+    position: relative;
+    z-index: 10;
+    margin-bottom: 60px;
+   
+    &__box{
+    display: flex;
+    justify-content: space-between; // Раскидываем на три стороны
+    align-items: center; // Выровняли всё ровно по центру по высоте
+    
+    
+    }
+   
+
+
+    // --- КНОПКА БУРГЕР ---
+    &__burger {
+        display: none; // По умолчанию скрыта на десктопе
+        flex-direction: column;
+        justify-content: space-around;
+        width: 30px;
+        height: 24px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 15;
+
+        span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: $c-text;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            transform-origin: 3px;
+        }
+
+        @include mq($bp-lg) {
+            display: flex; // Показываем бургер на планшетах и телефонах
+            
+        }
+    }
+
+    // Трансформация полосок в крестик при открытии
+    &--active &__burger {
+        span:nth-child(1) {
+            transform: rotate(45deg);
+            background-color: $c-primary;
+        }
+        span:nth-child(2) {
+            opacity: 0; // Средняя полоска исчезает
+        }
+        span:nth-child(3) {
+            transform: rotate(-45deg);
+            background-color: $c-primary;
+        }
+    }
+
+    // --- СПИСОК МЕНЮ ---
+    &__list {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $c-white;
+        border-radius: 100px;
+        padding: 8px;
+        margin: 0;
+        list-style: none;
+        
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04), 
+                    0 5px 10px rgba(0, 0, 0, 0.02);
+        
+        scrollbar-width: none;
+        &::-webkit-scrollbar { display: none; }
+
+        // --- АДАПТИВ: ПЛАНШЕТЫ И ТЕЛЕФОНЫ ---
+        @include mq($bp-lg) {
+            // Убираем стили десктопной таблетки
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 0;
+            padding: 0;
+            flex-wrap: nowrap;
+            flex-direction: column;
+            background-color: transparent;
+            box-shadow: none;
+            border-radius: 0;
+            overflow: hidden;
+            
+            // Делаем выпадающий блок
+            position: absolute;
+            top: 100%; // Прилипает к низу родителя
+            left: 0;
+            width: 100%;
+            background-color: $c-white;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            margin-top: 10px;
+
+            // СКРЫТОЕ СОСТОЯНИЕ (по умолчанию)
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px); // Поднято вверх на 10px
+            transition: all 0.3s ease;
+        }
+    }
+
+    // АКТИВНОЕ СОСТОЯНИЕ ВЫПАДАЮЩЕГО СПИСКА
+    &--active &__list {
+        @include mq($bp-lg) {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0); // Возвращаем на место (эффект выезда)
+        }
+    }
+
+    &__item {
+        flex-shrink: 0;
+        margin: 0;
+
+        // Разделители для мобильного меню
+        @include mq($bp-lg) {
+            border-bottom: 1px solid $c-border;
+            &:last-child { border-bottom: none; }
+        }
+    }
+
+    &__link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        border-radius: 50px;
+        color: #718096;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        @include fluid-font(16px, 14px);
+
+        &:hover {
+            color: $c-text;
+        }
+
+        &--active {
+            background-color: #4ba6ff;
+            color: $c-white;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(75, 166, 255, 0.25);
+
+            &:hover {
+                color: $c-white;
+                background-color: #3895eb;
+            }
+
+            // АДАПТИВ АКТИВНОЙ ССЫЛКИ (выглядит мягче в списке)
+            @include mq($bp-lg) {
+                background-color: $c-bg-light; // Светло-синий фон вместо синей таблетки
+                color: $c-primary;
+                box-shadow: none;
+                border-radius: 0;
+                font-weight: 700;
+                
+                &:hover { background-color: #e0efff; }
+            }
+        }
+
+        // АДАПТИВ ОБЫЧНЫХ ССЫЛОК
+        @include mq($bp-lg) {
+            justify-content: flex-start; // Текст прижать влево
+            padding: 16px 20px;
+            border-radius: 0;
+            width: 100%;
+        }
+    }
+}

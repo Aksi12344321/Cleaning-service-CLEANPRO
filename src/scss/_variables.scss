@@ -1,0 +1,24 @@
+
+// Breakpoints (Desktop First)
+$bp-xxl: 1440px;
+$bp-xl: 1200px;
+$bp-lg: 992px;
+$bp-md: 768px;
+$bp-sm: 576px;
+
+
+// Fonts
+ $font-main: 'Montserrat', sans-serif;
+
+// Colors
+ $c-primary: #43AAFF; 
+ $c-primary-hover: #2b96e8;
+ $c-secondary: #e2e8f0; // Более мягкий серый для вторичной кнопки
+ $c-secondary-hover: #cbd5e1;
+ $c-text: #1F2937; // Темный текст
+ $c-text-muted: #4B5258; // Цвет описания по ТЗ
+ $c-bg-light: #f0f7ff; // Фон подложки героя (очень легкий синий)
+ $c-white: #ffffff;
+ $c-border: #e2e8f0;
+ $c-btn-text: #FFFFFF; // Цвет шрифта на кнопках по ТЗ
+

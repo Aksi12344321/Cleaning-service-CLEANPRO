@@ -1,0 +1,54 @@
+// Подключаем встроенные модули Sass
+@use "sass:math";
+@use "sass:meta";
+
+@mixin mq($width) {
+    @media (max-width: $width) {
+        @content;
+    }
+}
+
+// Базовая функция конвертации px в rem
+@function rem($pixels, $context: 16px) {
+  // ИСПРАВЛЕНО: math.is-unitless
+  @if (math.is-unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
+  // ИСПРАВЛЕНО: math.is-unitless
+  @if (math.is-unitless($context)) {
+    $context: $context * 1px;
+  }
+  @return math.div($pixels, $context) * 1rem;
+}
+
+// Функция для удаления единиц измерения
+@function strip-unit($number) {
+  // ИСПРАВЛЕНО: math.is-unitless
+  @if meta.type-of($number) == 'number' and not math.is-unitless($number) {
+    @return math.div($number, $number * 0 + 1);
+  }
+  @return $number;
+}
+
+// Миксин для плавного шрифта (Fluid Typography)
+@mixin fluid-font($min-fs, $max-fs, $min-vw: 375px, $max-vw: 1200px) {
+  // Проверяем единицы измерений (они обычно не нужны для калькуляции, но оставим для валидации или удалите переменные $u)
+  $u1: math.unit($min-vw);
+  $u2: math.unit($max-vw);
+  $u3: math.unit($min-fs);
+  $u4: math.unit($max-fs);
+
+  $v1: strip-unit($min-vw);
+  $v2: strip-unit($max-vw);
+  $f1: strip-unit($min-fs);
+  $f2: strip-unit($max-fs);
+
+  $slope: math.div($f2 - $f1, $v2 - $v1);
+  $intercept: $f1 - $slope * $v1;
+
+  font-size: clamp(
+    rem($f1), 
+    rem($intercept) + $slope * 100vw, 
+    rem($f2)
+  );
+}

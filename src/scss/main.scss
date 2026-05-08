@@ -1,0 +1,20 @@
+// src/scss/main.scss
+
+
+@use 'fonts'; // <-- ДОБАВИТЬ ПЕРВОЙ СТРОКОЙ!
+@use 'variables'; // импорт _variables.scss
+@use 'mixins'; // импорт _mixins.scss
+@use 'base'; // импорт _base.scss
+@use 'modal'; // импорт _base.scss
+
+@use 'policy';
+
+@use 'header'; // импорт _header.scss
+@use 'hero'; // импорт _hero.scss
+@use 'steps'; // импорт _steps.scss 
+
+@use 'nav-menu'; // импорт _nav-menu.scss
+@use 'risks'; // импорт _calc-block.scss
+@use 'benefits';
+
+
