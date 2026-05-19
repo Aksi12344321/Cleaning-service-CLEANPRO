@@ -1,0 +1,56 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.back-to-top {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 99; // Кнопка должна быть поверх абсолютно всего
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    
+    background-color: $c-primary; // Твой фирменный синий цвет
+    color: $c-white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+    
+    // Начальное скрытое состояние
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+
+    svg {
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        background-color: #0284c7; // Чуть темнее при ховере
+        box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+        
+        svg {
+            transform: translateY(-2px); // Стрелочка слегка подпрыгивает
+        }
+    }
+
+    // Класс, который мы будем навешивать через JS при скролле
+    &--show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    // На мобилках делаем её чуть меньше и прижимаем ближе к краю
+    @include mq($bp-sm) {
+        bottom: 20px;
+        right: 20px;
+        width: 42px;
+        height: 42px;
+    }
+}

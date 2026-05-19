@@ -6,6 +6,8 @@
     position: relative;
     z-index: 10;
     margin-bottom: 80px;
+
+
    
     &__box{
     display: flex;
@@ -143,9 +145,20 @@
         white-space: nowrap;
         @include fluid-font(16px, 14px);
 
+        // --- ХОВЕР: Теперь при наведении ссылка становится синей таблеткой ---
         &:hover {
-            color: $c-text;
-        }
+            background-color: #4ba6ff;
+            color: $c-white;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(75, 166, 255, 0.25);
+            
+            // Адаптивный ховер для мобильного меню (чтобы на смартфонах не было синей таблетки на всю ширину)
+            @include mq($bp-lg) {
+                background-color: $c-bg-light;
+                color: $c-primary;
+                box-shadow: none;
+                font-weight: 700;
+            }}
 
         &--active {
             background-color: #4ba6ff;

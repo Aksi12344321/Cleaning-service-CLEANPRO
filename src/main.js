@@ -411,4 +411,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // Инициализация начального состояния кнопки (выключаем её сразу)
         validateInventoryForm();
     }
+
+
+    //==============КНОПКА ВВЕРХ=================
+    const backToTopBtn = document.getElementById('backToTop');
+
+    if (backToTopBtn) {
+        // 1. Отслеживаем прокрутку страницы
+        window.addEventListener('scroll', () => {
+            // Если пролистали больше 400 пикселей, добавляем класс показа
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('back-to-top--show');
+            } else {
+                backToTopBtn.classList.remove('back-to-top--show');
+            }
+        });
+
+        // 2. Обрабатываем клик по кнопке
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Плавный скролл наверх
+            });
+        });
+    }
 });
