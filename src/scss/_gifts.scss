@@ -1,0 +1,200 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.gifts {
+  position: relative;
+  padding: rem(80) 0;
+  margin-bottom: rem(100);
+  overflow: hidden;
+  z-index: 1;
+
+  // фон-овал
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150%;
+    height: 100%;
+    background: url('/src/assets/img/gifts-bg.jpg') no-repeat center / cover;
+    border-radius: 50% / 30%;
+    z-index: -1;
+
+    @include mq($bp-lg) {
+      width: 230%;
+      border-radius: 50% / 12%;
+    }
+  }
+
+  // общий контейнер
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: rem(40);
+  }
+
+  // заголовок ВСЕГДА сверху
+  &__title {
+    font-family: $font-main;
+    @include fluid-font(24, 32);
+    font-weight: 500;
+    color: $c-white;
+    line-height: 1.3;
+    max-width: rem(560);
+    margin-bottom: rem(10);
+
+    @include mq($bp-lg) {
+      text-align: center;
+      max-width: 100%;
+    }
+  }
+
+  // блок: карточки + картинка
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(40);
+
+    @include mq($bp-lg) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  // список карточек
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: rem(15);
+    max-width: rem(450);
+
+    @include mq($bp-lg) {
+      max-width: 100%;
+    }
+  }
+
+  // картинка
+  &__image {
+    flex: 0 0 rem(520);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    line-height: 0;
+
+    transform: translateY(-30px);
+
+    @include mq($bp-lg) {
+      flex: 0 1 auto;
+      width: 100%;
+      max-width: rem(420);
+      transform: none;
+    }
+  }
+
+  &__box-img {
+    width: 100%;
+    height: auto;
+    max-width: rem(520);
+    object-fit: contain;
+    animation: floatGift 4s ease-in-out infinite;
+  }
+}
+
+/* ===== КАРТОЧКИ ===== */
+
+.gift-card {
+  display: flex;
+  align-items: center;
+  gap: rem(20);
+
+  background: $c-white;
+  border-radius: rem(30);
+  padding: rem(18) rem(30);
+  box-shadow: 0 rem(8) rem(30) rgba(0, 0, 0, 0.04);
+
+  max-width: rem(450);
+  width: 100%;
+
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateX(rem(5));
+  }
+
+  @include mq($bp-sm) {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  &__icon {
+    width: rem(70);
+    height: rem(70);
+    flex-shrink: 0;
+    background: $c-bg-light;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: rem(70);
+      height: rem(70);
+      object-fit: contain;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: rem(12);
+    flex: 1;
+  }
+
+  &__title {
+    font-size: rem(16);
+    font-weight: 600;
+    color: $c-text;
+    line-height: 1.3;
+  }
+
+  &__text {
+    font-size: rem(13);
+    color: $c-text-muted;
+    line-height: 1.3;
+  }
+
+  &__btn {
+    align-self: flex-start;
+    border: 1px solid $c-primary;
+    background: transparent;
+    color: $c-primary;
+
+    padding: rem(10) rem(24);
+    border-radius: rem(100);
+
+    font-size: rem(13);
+    font-weight: 500;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: $c-primary;
+      color: $c-white;
+    }
+
+    @include mq($bp-sm) {
+      align-self: center;
+      width: 100%;
+    }
+  }
+}
+
+/* ===== АНИМАЦИЯ ===== */
+
+@keyframes floatGift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(rem(-12)); }
+}

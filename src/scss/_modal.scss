@@ -25,6 +25,11 @@
         visibility: visible;
     }
 
+   /*  &--active {
+        opacity: 1 !important;
+        visibility: visible !important;
+    } */
+
     &__overlay {
         position: absolute;
         top: 0; left: 0;

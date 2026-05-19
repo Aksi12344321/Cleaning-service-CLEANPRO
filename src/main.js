@@ -1,230 +1,414 @@
-import './scss/main.scss'; // или любой другой путь к твоему главному файлу стилей
+import './scss/main.scss';
+import Swiper from 'swiper/bundle';
+import 'swiper/css/bundle';
 
 document.addEventListener('DOMContentLoaded', () => {
-
     const modal = document.getElementById('calcModal');
-    if (!modal) return;
-
-    const overlay = modal.querySelector('.modal__overlay');
-    const closeBtn = modal.querySelector('.modal__close');
-    const formWrapper = modal.querySelector('.modal__form-wrapper');
-    const successBlock = modal.querySelector('.modal__success');
-    const form = document.getElementById('calcForm');
-
-    // Находим элементы текста внутри попапа
-    const modalTitle = modal.querySelector('.modal__title');
-    const modalSubtitle = modal.querySelector('.modal__subtitle');
-    const successTitle = modal.querySelector('.modal__success-title');
-    const successText = modal.querySelector('.modal__success-text');
-
-    const nameInput = form.querySelector('[name="user_name"]');
-    const phoneInput = form.querySelector('[name="user_phone"]');
-    const emailInput = form.querySelector('[name="user_email"]');
-    const consentCheckbox = form.querySelector('[name="consent_data"]');
-    const submitBtn = form.querySelector('button[type="submit"]');
-
-    // -------------------------
-    // TOUCH STATE
-    // -------------------------
-    const touched = { name: false, phone: false, email: false, consent: false };
-    submitBtn.disabled = true;
-
-    // -------------------------
-    // HELPERS
-    // -------------------------
-    function removeError(group) {
-        group.classList.remove('form__group--error');
-        const error = group.querySelector('.form__error');
-        if (error) error.remove();
-    }
-
-    function showError(group, message) {
-        group.classList.add('form__group--error');
-        const error = document.createElement('span');
-        error.className = 'form__error';
-        error.innerHTML = message;
-        group.appendChild(error);
-    }
     
-    // Функция полной очистки ошибок (нужно при открытии)
-    function clearAllErrors() {
-        document.querySelectorAll('.form__error').forEach(el => el.remove());
-        document.querySelectorAll('.form__group--error').forEach(el => el.classList.remove('form__group--error'));
-        document.querySelectorAll('.form__checkbox-label--error').forEach(el => el.classList.remove('form__checkbox-label--error'));
-    }
+    if (modal) {
+        const overlay = modal.querySelector('.modal__overlay');
+        const closeBtn = modal.querySelector('.modal__close');
+        const formWrapper = modal.querySelector('.modal__form-wrapper');
+        const successBlock = modal.querySelector('.modal__success');
+        const modalTitle = modal.querySelector('.modal__title');
+        const form = document.getElementById('calcForm');
 
-    // -------------------------
-    // PHONE MASK
-    // -------------------------
-    phoneInput.addEventListener('input', (e) => {
-        let digits = e.target.value.replace(/\D/g, '');
-        if (digits.startsWith('8')) digits = digits.slice(1);
-        if (digits.startsWith('7')) digits = digits.slice(1);
-        digits = digits.substring(0, 10);
+        // Элементы полей
+        const nameInput = form.querySelector('[name="user_name"]');
+        const phoneInput = form.querySelector('[name="user_phone"]');
+        const emailInput = form.querySelector('[name="user_email"]');
+        const consentCheckbox = form.querySelector('[name="consent_data"]');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const serviceInput = form.querySelector('[name="service_name"]');
 
-        let formatted = '+7';
-        if (digits.length > 0) formatted += ' (' + digits.substring(0, 3);
-        if (digits.length >= 4) formatted += ') ' + digits.substring(3, 6);
-        if (digits.length >= 7) formatted += '-' + digits.substring(6, 8);
-        if (digits.length >= 9) formatted += '-' + digits.substring(8, 10);
-        e.target.value = formatted;
+        // Состояния валидации (true — пользователь взаимодействовал с полем)
+        const touched = { name: false, phone: false, email: false, consent: false };
 
-        validateAll();
-    });
-
-    // -------------------------
-    // TOUCH EVENTS
-    // -------------------------
-    nameInput.addEventListener('blur', () => touched.name = true);
-    phoneInput.addEventListener('blur', () => touched.phone = true);
-    emailInput.addEventListener('blur', () => touched.email = true);
-    consentCheckbox.addEventListener('change', () => touched.consent = true);
-
-    // -------------------------
-    // LIVE VALIDATION
-    // -------------------------
-    nameInput.addEventListener('input', validateAll);
-    phoneInput.addEventListener('input', validateAll);
-    emailInput.addEventListener('input', validateAll);
-    consentCheckbox.addEventListener('change', validateAll);
-
-    // -------------------------
-    // VALIDATION
-    // -------------------------
-    function validateAll() {
-        let valid = true;
-
-        const nameGroup = nameInput.closest('.form__group');
-        removeError(nameGroup);
-        if (touched.name && !nameInput.value.trim()) { showError(nameGroup, 'Поле должно быть заполнено'); valid = false; }
-
-        const phoneGroup = phoneInput.closest('.form__group');
-        removeError(phoneGroup);
-        const phoneDigits = phoneInput.value.replace(/\D/g, '');
-        if (touched.phone && phoneDigits.length > 0 && phoneDigits.length < 11) { showError(phoneGroup, 'Введите корректный номер'); valid = false; }
-        if (touched.phone && phoneDigits.length === 0 && phoneInput.value !== '') { showError(phoneGroup, 'Введите номер'); valid = false; }
-
-        const emailGroup = emailInput.closest('.form__group');
-        removeError(emailGroup);
-        const emailVal = emailInput.value.trim();
+        // Регулярное выражение для Email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (touched.email && emailVal && !emailRegex.test(emailVal)) { showError(emailGroup, 'Введите корректный email'); valid = false; }
-        if (touched.email && emailVal === '') { showError(emailGroup, 'Поле должно быть заполнено'); valid = false; }
 
-        const label = consentCheckbox.closest('.form__checkbox-label');
-        if (touched.consent && !consentCheckbox.checked) { label.classList.add('form__checkbox-label--error'); valid = false; } 
-        else { label.classList.remove('form__checkbox-label--error'); }
+        function validateModal() {
+            const isNameValid = nameInput.value.trim().length >= 2;
+            const isPhoneValid = phoneInput.value.replace(/\D/g, "").length === 11;
+            
+            // Email ОБЯЗАТЕЛЕН и должен соответствовать регулярке
+            const isEmailValid = emailRegex.test(emailInput.value.trim()); 
+            
+            const isConsentValid = consentCheckbox.checked;
 
-        const nameOk = nameInput.value.trim().length > 0;
-        const phoneOk = phoneDigits.length === 11;
-        const emailOk = emailRegex.test(emailVal);
-        const consentOk = consentCheckbox.checked;
+            // Логика отображения ошибок (только если поле "тронуто")
+            toggleError(nameInput, 'Введите имя (минимум 2 символа)', !isNameValid && touched.name);
+            toggleError(phoneInput, 'Введите полный номер телефона', !isPhoneValid && touched.phone);
+            toggleError(emailInput, 'Введите корректный email', !isEmailValid && touched.email);
+            toggleError(consentCheckbox, '', !isConsentValid && touched.consent);
 
-        submitBtn.disabled = !(nameOk && phoneOk && emailOk && consentOk);
-    }
-
-    // -------------------------
-    // MODAL LOGIC (ИЗМЕНЕНО!)
-    // -------------------------
-    function openModal(triggerBtn) {
-        // 1. Читаем текст из data-атрибутов нажатой кнопки (с подстраховкой на случай, если атрибута нет)
-        const title = triggerBtn.getAttribute('data-modal-title') || 'Заявка';
-        const subtitle = triggerBtn.getAttribute('data-modal-subtitle') || '';
-        const sTitle = triggerBtn.getAttribute('data-modal-success-title') || 'Спасибо!';
-        let sText = triggerBtn.getAttribute('data-modal-success-text') || '';
-
-          // МАГИЯ ЗДЕСЬ: Если у кнопки стоит флажок data-show-promo, 
-        // мы находим слово SAVE10 в тексте и оборачиваем его в красивый синий span
-        if (triggerBtn.hasAttribute('data-show-promo')) {
-            sText = sText.replace('SAVE10', "<span class='modal__promo-highlight'>'SAVE10'</span>");
+            // Кнопка активна только если ВСЕ поля валидны
+            const canSubmit = isNameValid && isPhoneValid && isEmailValid && isConsentValid;
+            submitBtn.disabled = !canSubmit;
+            
+            return canSubmit;
         }
-       
 
-        // 2. Подменяем текст в попапе
-        modalTitle.textContent = title;
-        modalSubtitle.textContent = subtitle;
-        successTitle.textContent = sTitle;
-        successText.innerHTML = sText;
-
-        // 3. Сбрасываем состояние формы
-        form.reset();
-        submitBtn.disabled = true;
-        Object.keys(touched).forEach(key => touched[key] = false); // Сбрасываем touched
-        clearAllErrors();
-
-        // 4. Показываем нужную часть попапа и открываем
-        formWrapper.style.display = 'block';
-        successBlock.classList.remove('modal__success--active');
+        // Слушатели для активации статуса "touched" (чтобы ошибки не висели сразу)
+        nameInput.addEventListener('blur', () => { touched.name = true; validateModal(); });
+        phoneInput.addEventListener('blur', () => { touched.phone = true; validateModal(); });
+        emailInput.addEventListener('blur', () => { touched.email = true; validateModal(); });
         
-        modal.classList.add('modal--active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        modal.classList.remove('modal--active');
-        document.body.style.overflow = '';
-    }
-
-    // Привязываем клик, передавая саму кнопку (this) внутрь функции
-    document.querySelectorAll('[data-modal-target="#calcModal"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            openModal(this); 
-        });
-    });
-
-    closeBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', closeModal);
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
-    });
-
-    // -------------------------
-    // SUBMIT
-    // -------------------------
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        // Принудительно трогаем все поля для проверки перед отправкой
-        touched.name = true; touched.phone = true; touched.email = true; touched.consent = true;
-        validateAll();
-
-        if (submitBtn.disabled) return;
-
-        setTimeout(() => {
-            formWrapper.style.display = 'none';
-            successBlock.classList.add('modal__success--active');
-        }, 300);
-    });
-
-
-
-        // -------------------------
-    // BURGER MENU LOGIC
-    // -------------------------
-    const navMenu = document.querySelector('.nav-menu');
-    const burgerBtn = document.querySelector('.nav-menu__burger');
-
-    if (navMenu && burgerBtn) {
-        // Открытие/Закрытие по клику на бургер
-        burgerBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('nav-menu--active');
+        // Для email включаем показ ошибки быстрее, если пользователь начал вводить данные
+        emailInput.addEventListener('input', () => {
+            if (emailInput.value.trim().length > 5) touched.email = true; 
+            validateModal();
         });
 
-        // Закрытие меню при клике на ссылку (чтобы не закрывало вручную)
-        navMenu.querySelectorAll('.nav-menu__link').forEach(link => {
-            link.addEventListener('click', () => {
-                if (navMenu.classList.contains('nav-menu--active')) {
-                    navMenu.classList.remove('nav-menu--active');
+        consentCheckbox.addEventListener('change', () => { 
+            touched.consent = true; 
+            validateModal(); 
+        });
+
+        // Маска телефона и общая валидация при вводе
+        form.addEventListener('input', (e) => {
+            if (e.target.name === 'user_phone') applyPhoneMask(e.target);
+            if (e.target.name === 'user_name') validateModal();
+        });
+
+        // Открытие модалки и подстановка услуги
+        document.querySelectorAll('[data-modal-target="#calcModal"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const serviceTitle = btn.getAttribute('data-modal-title') || 'Рассчитать стоимость';
+                modalTitle.textContent = serviceTitle;
+
+                if (serviceInput) {
+                    serviceInput.value = serviceTitle;
                 }
+
+                formWrapper.style.display = 'block';
+                successBlock.classList.remove('modal__success--active');
+                modal.classList.add('modal--active');
+                document.body.style.overflow = 'hidden';
+                
+                // Сброс состояния ошибок при новом открытии
+                Object.keys(touched).forEach(key => touched[key] = false);
+                form.reset();
+                validateModal(); 
             });
         });
 
-        // Закрытие меню при клике вне его области
-        document.addEventListener('click', (e) => {
-            if (!navMenu.contains(e.target) && navMenu.classList.contains('nav-menu--active')) {
-                navMenu.classList.remove('nav-menu--active');
-            }
+        const closeAll = () => {
+            modal.classList.remove('modal--active');
+            document.body.style.overflow = '';
+        };
+
+        [overlay, closeBtn].forEach(el => el?.addEventListener('click', closeAll));
+
+        // Финальная отправка
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // На всякий случай помечаем всё как touched перед отправкой
+            Object.keys(touched).forEach(k => touched[k] = true);
+            
+            if (!validateModal()) return;
+
+            submitBtn.textContent = 'ОТПРАВКА...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                const formData = new FormData(form);
+                console.log("Данные к отправке:", Object.fromEntries(formData));
+
+                form.reset();
+                submitBtn.textContent = 'Отправить заявку';
+                formWrapper.style.display = 'none';
+                successBlock.classList.add('modal__success--active');
+            }, 1500);
         });
     }
 
+    // --- ЛОГИКА БАННЕРА ПРАЙС-ЛИСТА ---
+    const priceForm = document.getElementById('priceForm');
+    if (priceForm) {
+        const pricePhoneInput = priceForm.querySelector('[name="user_phone"]');
+        const priceConsentCheckbox = priceForm.querySelector('[name="consent_data"]');
+        const priceSubmitBtn = priceForm.querySelector('.price-banner__btn');
+        const priceTouched = { phone: false, consent: false };
+
+        function validatePriceForm() {
+            const isPhoneValid = pricePhoneInput.value.replace(/\D/g, "").length === 11;
+            const isConsentValid = priceConsentCheckbox.checked;
+
+            toggleError(pricePhoneInput, 'Неполный номер', !isPhoneValid && priceTouched.phone);
+            toggleError(priceConsentCheckbox, '', !isConsentValid && priceTouched.consent);
+
+            priceSubmitBtn.disabled = !(isPhoneValid && isConsentValid);
+            return isPhoneValid && isConsentValid;
+        }
+
+        pricePhoneInput.addEventListener('blur', () => { priceTouched.phone = true; validatePriceForm(); });
+        priceConsentCheckbox.addEventListener('change', () => { priceTouched.consent = true; validatePriceForm(); });
+
+        priceForm.addEventListener('input', (e) => {
+            if (e.target.name === 'user_phone') applyPhoneMask(e.target);
+            validatePriceForm();
+        });
+
+        priceForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!validatePriceForm()) return;
+
+            priceSubmitBtn.textContent = 'ОТКРЫВАЕМ ПРАЙС...';
+            priceSubmitBtn.disabled = true;
+
+            const pdfUrl = '/public/dogovor.pdf'; 
+
+            setTimeout(() => {
+                window.open(pdfUrl, '_blank');
+                priceForm.reset();
+                priceTouched.phone = false;
+                priceTouched.consent = false;
+                priceSubmitBtn.textContent = 'ПОЛУЧИТЬ ПРАЙС';
+                validatePriceForm();
+            }, 600);
+        });
+    }
+
+    // --- УТИЛИТЫ ---
+    function applyPhoneMask(input) {
+        let matrix = "+7 (___) ___-__-__",
+            i = 0,
+            def = matrix.replace(/\D/g, ""),
+            val = input.value.replace(/\D/g, "");
+        if (def.length >= val.length) val = def;
+        input.value = matrix.replace(/./g, function(a) {
+            return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a;
+        });
+    }
+
+    function toggleError(input, message, isError) {
+        const group = input.closest('.form__group') || input.closest('.form__checkbox-label') || input.closest('.form-capture__field') || input.closest('.checkbox');
+        if (!group) return;
+
+        const errorClass = input.type === 'checkbox' ? 'form__checkbox-label--error' : 'form__group--error';
+        
+        if (isError) {
+            group.classList.add(errorClass);
+            if (input.type !== 'checkbox' && !group.querySelector('.form__error')) {
+                const error = document.createElement('span');
+                error.className = 'form__error';
+                error.textContent = message;
+                group.appendChild(error);
+            }
+        } else {
+            group.classList.remove(errorClass);
+            const errorText = group.querySelector('.form__error');
+            if (errorText) errorText.remove();
+        }
+    }
+
+    //-----ПЕРЕКЛЮЧАТЕЛЬ ТАБОВ-----
+
+    const tabBtns = document.querySelectorAll('.tabs__btn');
+    const tabPanes = document.querySelectorAll('.tabs__pane');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-tab');
+
+            // Убираем активные классы
+            tabBtns.forEach(b => b.classList.remove('tabs__btn--active'));
+            tabPanes.forEach(p => p.classList.remove('tabs__pane--active'));
+
+            // Добавляем активные классы
+            btn.classList.add('tabs__btn--active');
+            document.getElementById(target).classList.add('tabs__pane--active');
+        });
+    });
+
+    //------------------ДО/ПОСЛЕ+СЛАЙДЕР
+
+    // 1. Инициализация слайдера
+    const swiper = new Swiper('.cases-slider', {
+        // Это заставит обертку растягивать слайды до高度 самого высокого
+        autoHeight: false, 
+
+        // Плавность переключений
+        speed: 800,
+        grabCursor: true,
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+       navigation: {
+       nextEl: '.cases-slider__btn--next',
+       prevEl: '.cases-slider__btn--prev',
+},
+
+        breakpoints: {
+            // Когда экран >= 320px
+            320: {
+                spaceBetween: 10
+            },
+            // Когда экран >= 768px
+            768: {
+                spaceBetween: 20
+            },
+            // Когда экран >= 1200px
+            1200: {
+                spaceBetween: 30
+            }
+        }
+    });
+
+    // Инициализация слайдера сертификатов
+    const certsSwiper = new Swiper('.certs-slider', {
+        speed: 600,
+        grabCursor: true,
+        loop: true, // Включаем бесконечную прокрутку
+        
+        // Настройки навигации кнопками
+        navigation: {
+            nextEl: '.certs-slider__btn--next',
+            prevEl: '.certs-slider__btn--prev',
+        },
+
+        // Адаптивная сетка количества слайдов
+        breakpoints: {
+            // Экран от 320px до 767px (мобилки)
+            320: {
+                slidesPerView: 1,
+                spaceBetween: 15
+            },
+            // Экран от 768px до 1199px (планшеты)
+            768: {
+                slidesPerView: 2,
+                spaceBetween: 25
+            },
+            // Экран от 1200px (десктоп, как на макете)
+            1200: {
+                slidesPerView: 3,
+                spaceBetween: 35
+            }
+        }
+    });
+
+    // 2. Логика До/После
+    const compareSliders = document.querySelectorAll('.compare__slider');
+
+    compareSliders.forEach(slider => {
+        slider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            const container = slider.closest('.compare');
+            const beforeImg = container.querySelector('.compare__before');
+            const handle = container.querySelector('.compare__handle');
+
+            // Обновляем clip-path верхнего фото
+            beforeImg.style.clipPath = `inset(0 ${100 - value}% 0 0)`;
+            // Двигаем линию разделителя
+            handle.style.left = `${value}%`;
+        });
+    });
+
+    // --- ЛОГИКА ФОРМЫ В СЕКЦИИ INVENTORY ---
+    const inventoryForm = document.querySelector('.inventory__form');
+    if (inventoryForm) {
+        const invPhoneInput = inventoryForm.querySelector('.form-capture__input');
+        const invConsentCheckbox = inventoryForm.querySelector('.checkbox__input');
+        const invSubmitBtn = inventoryForm.querySelector('.form-capture__btn');
+        
+        // Объект для отслеживания взаимодействия (чтобы не пугать ошибками сразу)
+        const invTouched = { phone: false, consent: false };
+
+        function validateInventoryForm() {
+            // Очищаем от не-цифр и проверяем длину (11 цифр для РФ)
+            const cleanPhone = invPhoneInput.value.replace(/\D/g, "");
+            const isPhoneValid = cleanPhone.length === 11;
+            const isConsentValid = invConsentCheckbox.checked;
+
+            // Кастомный вывод ошибок для структуры формы инвентаря
+            const fieldGroup = invPhoneInput.closest('.form-capture__field');
+            if (fieldGroup) {
+                if (!isPhoneValid && invTouched.phone) {
+                    fieldGroup.classList.add('form-capture__field--error');
+                    if (!fieldGroup.querySelector('.form__error')) {
+                        const error = document.createElement('span');
+                        error.className = 'form__error';
+                        error.textContent = 'Введите полный номер';
+                        fieldGroup.appendChild(error);
+                    }
+                } else {
+                    fieldGroup.classList.remove('form-capture__field--error');
+                    const errorText = fieldGroup.querySelector('.form__error');
+                    if (errorText) errorText.remove();
+                }
+            }
+            
+            // Кнопка становится активной только при полной валидности
+            const isValid = isPhoneValid && isConsentValid;
+            invSubmitBtn.disabled = !isValid;
+
+            return isValid;
+        }
+
+        // Слушатель на потерю фокуса (blur), чтобы пометить поле как "тронутое"
+        invPhoneInput.addEventListener('blur', () => { 
+            invTouched.phone = true; 
+            validateInventoryForm(); 
+        });
+
+        // Слушатель на чекбокс
+        invConsentCheckbox.addEventListener('change', () => { 
+            invTouched.consent = true; 
+            validateInventoryForm(); 
+        });
+
+        // Живая валидация при вводе
+        inventoryForm.addEventListener('input', (e) => {
+            if (e.target === invPhoneInput) {
+                applyPhoneMask(e.target); // Применяем твою маску
+            }
+            validateInventoryForm();
+        });
+
+        // Обработка отправки формы
+        inventoryForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Останавливаем перезагрузку страницы
+
+            if (!validateInventoryForm()) return;
+
+            // Находим целевую модалку по атрибуту кнопки
+            const targetModalId = invSubmitBtn.getAttribute('data-modal-target'); 
+            const targetModal = document.querySelector(targetModalId);
+
+            if (targetModal) {
+                const serviceTitle = invSubmitBtn.getAttribute('data-modal-title') || 'Заказать уборку';
+                
+                const modalTitle = targetModal.querySelector('.modal__title');
+                const formWrapper = targetModal.querySelector('.modal__form-wrapper');
+                const successBlock = targetModal.querySelector('.modal__success');
+                const serviceInput = targetModal.querySelector('[name="service_name"]');
+
+                if (modalTitle) modalTitle.textContent = serviceTitle;
+                if (serviceInput) {
+                    serviceInput.value = serviceTitle;
+                }
+
+                if (formWrapper) formWrapper.style.display = 'block';
+                if (successBlock) successBlock.classList.remove('modal__success--active');
+                
+                targetModal.classList.add('modal--active');
+                document.body.style.overflow = 'hidden';
+
+                // Сбрасываем форму инвентаря после вызова модалки
+                invTouched.phone = false;
+                invTouched.consent = false;
+                inventoryForm.reset();
+                validateInventoryForm();
+            }
+        });
+
+        // Инициализация начального состояния кнопки (выключаем её сразу)
+        validateInventoryForm();
+    }
 });

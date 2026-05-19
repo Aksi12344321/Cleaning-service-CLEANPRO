@@ -1,0 +1,337 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+/* =========================================
+   CASES
+========================================= */
+
+.cases {
+  padding: rem(80) rem(40);
+  background: $c-white;
+
+  &__header {
+    text-align: center;
+    margin-bottom: rem(50);
+  }
+
+  &__title {
+    font-family: $font-main;
+    @include fluid-font(28, 40);
+    font-weight: 700;
+    color: $c-text;
+    margin-bottom: rem(15);
+  }
+
+  &__subtitle {
+    max-width: rem(700);
+    margin: 0 auto;
+    font-size: rem(18);
+    line-height: 1.5;
+    color: $c-text-muted;
+  }
+}
+
+/* =========================================
+   SLIDER
+========================================= */
+
+.cases-slider {
+  position: relative;
+
+  /* место под стрелки */
+  padding-inline: rem(70);
+
+  /* место под пагинацию */
+  padding-bottom: rem(70);
+
+  .swiper {
+    overflow: hidden;
+  }
+
+  .swiper-wrapper {
+    align-items: stretch;
+  }
+
+  .swiper-slide {
+    display: flex;
+    height: auto;
+  }
+
+  .swiper-pagination {
+    bottom: 0 !important;
+  }
+
+  .swiper-pagination-bullet {
+    width: rem(10);
+    height: rem(10);
+    background: #d9d9d9;
+    opacity: 1;
+    transition: 0.3s ease;
+  }
+
+  .swiper-pagination-bullet-active {
+    width: rem(10);
+    border-radius: rem(10);
+    background: $c-primary;
+  }
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.cases-slider__btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: rem(56);
+  height: rem(56);
+
+  border-radius: 50%;
+  background: $c-primary;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  z-index: 100;
+
+  box-shadow: 0 rem(6) rem(20) rgba(67, 170, 255, 0.35);
+
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+
+  img {
+    width: rem(20);
+    height: rem(20);
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
+  /* ВАЖНО: без scale — иначе будет обрезание */
+  &:hover {
+    background: #ffc24c;
+    box-shadow: 0 rem(10) rem(30) rgba(67, 170, 255, 0.45);
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+
+  &--prev {
+    left: 0;
+  }
+
+  &--next {
+    right: 0;
+  }
+}
+
+/* =========================================
+   CARD
+========================================= */
+
+.case-card {
+  flex: 1;
+  display: flex;
+  gap: rem(40);
+
+  margin: rem(45);
+  padding: rem(40);
+
+  background: $c-white;
+  border-radius: rem(32);
+  box-shadow: 0 rem(8) rem(30) rgba(0, 0, 0, 0.08);
+
+  @include mq($bp-lg) {
+    flex-direction: column;
+    padding: rem(25);
+  }
+
+  @include mq($bp-md) {
+    gap: rem(20);
+    padding: rem(20);
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__title {
+    margin-bottom: rem(24);
+    font-size: rem(24);
+    font-weight: 700;
+    line-height: 1.4;
+    color: $c-text;
+  }
+
+  &__list {
+    list-style: none;
+    margin-bottom: rem(30);
+
+    li {
+      margin-bottom: rem(14);
+      font-size: rem(15);
+      line-height: 1.5;
+      color: $c-text-muted;
+
+      span {
+        font-weight: 700;
+        color: $c-text;
+      }
+    }
+  }
+
+  &__price {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: rem(16) rem(28);
+
+    border: 1px solid $c-primary;
+    border-radius: rem(100);
+
+    font-size: rem(16);
+    font-weight: 700;
+    color: $c-primary;
+  }
+}
+
+/* =========================================
+   COMPARE
+========================================= */
+
+.compare {
+  position: relative;
+  width: rem(460);
+  height: rem(360);
+
+  border-radius: rem(24);
+  overflow: hidden;
+  flex-shrink: 0;
+
+  @include mq($bp-lg) {
+    width: 100%;
+    height: rem(320);
+  }
+
+  @include mq($bp-sm) {
+    height: rem(240);
+  }
+
+  &__images {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__before {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  &__slider {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    appearance: none;
+    background: transparent;
+    z-index: 5;
+    cursor: col-resize;
+  }
+
+  &__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: white;
+    z-index: 4;
+    pointer-events: none;
+
+    &-circle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      width: rem(52);
+      height: rem(52);
+      border-radius: 50%;
+      background: #ffc24c;
+      border: 3px solid white;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@include mq($bp-lg) {
+  .cases {
+    padding: rem(60) rem(20);
+  }
+
+  .cases-slider {
+    padding-inline: rem(55);
+  }
+
+  .cases-slider__btn {
+    width: rem(46);
+    height: rem(46);
+  }
+}
+
+@include mq($bp-md) {
+  .cases {
+    padding: rem(60) rem(15);
+  }
+
+  .cases-slider {
+    padding-inline: rem(45);
+  }
+
+  .cases-slider__btn {
+    width: rem(42);
+    height: rem(42);
+
+    img {
+      width: rem(16);
+      height: rem(16);
+    }
+  }
+}
+
+@include mq($bp-sm) {
+  .cases-slider {
+    padding-inline: 0;
+  }
+
+  .cases-slider__btn {
+    display: none;
+  }
+}

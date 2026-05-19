@@ -14,7 +14,23 @@
 @use 'steps'; // импорт _steps.scss 
 
 @use 'nav-menu'; // импорт _nav-menu.scss
+@use 'calc-banner';
 @use 'risks'; // импорт _calc-block.scss
 @use 'benefits';
+@use 'benefits-form';
+@use 'services';
+@use 'extra-services';
+@use 'price-banner';
+@use 'how-we-clean';
+@use 'cases';
+@use 'photo-calc';
+@use 'inventory';
+@use 'gifts';
+@use 'certs';
+@use 'urgent';
+@use 'faq';
+@use 'footer';
+
+
 
 

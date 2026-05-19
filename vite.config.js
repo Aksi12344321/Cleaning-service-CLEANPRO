@@ -2,10 +2,11 @@ import { defineConfig } from 'vite'
 import injectHTML from 'vite-plugin-html-inject'
 import { resolve } from 'path'
 
-
-
 export default defineConfig({
-   plugins: [
+  // Базовый путь для GitHub Pages (название твоего репозитория)
+  base: '/Cleaning-service-CLEANPRO/',
+  
+  plugins: [
     injectHTML()
   ],
   build: {

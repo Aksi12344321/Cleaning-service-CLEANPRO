@@ -1,0 +1,145 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.certs {
+ margin-bottom: rem(80);
+  background-color: $c-white;
+
+  &__header {
+    text-align: center;
+    margin-bottom: rem(50);
+  }
+
+  &__title {
+    font-family: $font-main;
+    @include fluid-font(28, 36);
+    font-weight: 700;
+    color: $c-text;
+    margin-bottom: rem(15);
+  }
+
+  &__subtitle {
+    font-size: rem(18);
+    color: $c-text-muted;
+    max-width: rem(600);
+    margin: 0 auto;
+  }
+
+  &__slider-wrapper {
+    position: relative;
+    padding: 0 rem(60);
+
+    @include mq($bp-sm) {
+      padding: 0 rem(20);
+    }
+  }
+}
+
+/* =========================
+   SWIPER RESET (ВАЖНО)
+========================= */
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* =========================
+   SWIPER SLIDER
+========================= */
+
+.certs-slider {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* =========================
+   CUSTOM BUTTONS
+========================= */
+
+.certs-slider__btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: rem(50);
+  height: rem(50);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #43aaff;
+  border-radius: 50%;
+  border: none;
+
+  cursor: pointer;
+  z-index: 10;
+
+  transition: all 0.3s ease;
+
+  img {
+    width: rem(18);
+    height: rem(18);
+    object-fit: contain;
+    display: block;
+  }
+
+  &:hover {
+    background-color: #43aaff, 7%;
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  &--prev {
+    left: 0;
+  }
+
+  &--next {
+    right: 0;
+  }
+
+  @include mq($bp-sm) {
+    display: none;
+  }
+}
+
+/* =========================
+   SLIDES
+========================= */
+
+.certs-slider__slide {
+  display: flex;
+  justify-content: center;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.cert-card {
+  width: 100%;
+  background: $c-white;
+  border-radius: rem(20);
+  padding: rem(10);
+  box-shadow: 0 rem(10) rem(40) rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(rem(-5));
+    box-shadow: 0 rem(15) rem(40) rgba(0, 0, 0, 0.08);
+  }
+
+  &__img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: rem(16);
+    display: block;
+  }
+}

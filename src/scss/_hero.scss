@@ -5,34 +5,24 @@
     position: relative;
     padding: 60px 0 140px;
     z-index: 1;
+    background-color: $c-bg-light;
+    margin-bottom: rem(40);
 
-    /* Сложный изогнутый фон на всю ширину */
-    &__bg-wave {
-        position: absolute;
-        top: -15%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 110%;
-        height: 120%;
-        background-color: $c-bg-light;
-        border-radius: 0 0 50% 50%;
-        z-index: -1;
-
-        @include mq($bp-lg) { 
-            width: 120%; 
-            height: 110%;
-        }
-        @include mq($bp-sm) { 
-            width: 130%;
-            border-radius: 0 0 30% 30%; 
-        }
+    &::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("src/assets/img/hero-bottom.png") no-repeat bottom;
+    background-size: content;
+    z-index: 0;
+    pointer-events: none;
     }
 
     &__container {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 60px;
+        gap: 40px;
 
         @include mq($bp-lg) {
             flex-direction: column;
@@ -42,8 +32,12 @@
     }
 
     &__content {
-      
 
+        flex: 1; // Занимает доступное пространство
+        min-width: rem(550); // ГАРАНТИРУЕТ, что текст не сожмется меньше этой ширины
+        position: relative;
+        z-index: 2;
+      
          @include mq($bp-lg) {
             margin-bottom: 20px;
             text-align: center;
@@ -95,30 +89,34 @@
 
     &__image-wrapper {
         position: relative;
+        flex-shrink: 0; // Запрещаем контейнеру картинки сжиматься
+        width: 50%; // Задаем желаемую ширину (можно в px, например 600px)
+        display: flex;
+        justify-content: flex-end;
         
 
         @include mq($bp-lg) { 
             width: 100%; 
             max-width: 450px; 
+            justify-content: center;
         }
     }
 
-    &__image {
-        width: 100%;
+
+
+        &__image {
+        width: 110%; // Можно сделать чуть больше контейнера для эффекта наложения
+        max-width: none; // Позволяет картинке быть больше обертки
         height: auto;
-        /* Скругление как на референсе (овальная форма) */
-        border-radius: 180px 180px 40px 40px; 
-        /* Эффект размытого фона достигается за счет мягкой тени под картинкой */
-        box-shadow: 0 30px 80px rgba(67, 170, 255, 0.2);
-        object-fit: cover;
-        transform: translateY(20px); // Немного опускаем для эстетики
+        object-fit: contain; // Чтобы картинка не обрезалась
+        
+        // Если нужно, чтобы картинка "свисала" вправо за пределы сетки:
+        // margin-right: rem(-100); 
 
-        @include mq($bp-lg) { 
-            border-radius: 120px 120px 30px 30px;
-            transform: translateY(0); 
-        }
-        @include mq($bp-sm) { 
-            border-radius: 80px 80px 20px 20px; 
+        @include mq($bp-lg) {
+            width: 100%;
+            margin-right: 0;
         }
     }
+       
 }

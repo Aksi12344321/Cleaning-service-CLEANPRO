@@ -1,0 +1,67 @@
+<section class="price-banner">
+    <div class="container">
+        <div class="price-banner__card">
+            
+            <div class="price-banner__left">
+                <h2 class="price-banner__title">
+                    Хотите прицениться? <br>
+                    <span>Получите актуальный прайс-лист услуг всего в 1 клик</span>
+                </h2>
+
+                <p class="price-banner__card-subtitle">
+                    — Где вам удобнее получить?
+                </p>
+
+                <div class="price-banner__socials">
+                    <a href="https://t.me/твой_юзернейм" target="_blank" class="price-banner__social price-banner__social--tg">
+                        <img src="src/assets/img/tg.png" alt="Telegram">
+                    </a>
+
+                    <a href="https://vk.com/твоя_страница" target="_blank" class="price-banner__social price-banner__social--wa">
+                        <img src="src/assets/img/vk.png" alt="WhatsApp">
+                    </a>
+                </div>
+
+                <form class="form price-banner__form" id="priceForm">
+                    <div class="form__group price-banner__group">
+                        <input 
+                            type="tel"
+                            name="user_phone"
+                            class="form__input price-banner__input"
+                            placeholder="Введите ваш телефон"
+                        >
+                        </div>
+
+                    <button type="submit" class="btn price-banner__btn" disabled>
+                        ПОЛУЧИТЬ ПРАЙС
+                    </button>
+
+                    <div class="form__consents price-banner__consents">
+                        <label class="form__checkbox-label">
+                            <input 
+                                type="checkbox"
+                                name="consent_data"
+                                class="form__checkbox"
+                                checked
+                                required
+                            >
+                            <span class="form__checkbox-custom"></span>
+                            <span class="price-banner__policy">
+                                Нажимая на кнопку вы соглашаетесь с условиями 
+                                <a href="/src/pages/policy.html">Политики конфиденциальности</a>
+                            </span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="price-banner__visual">
+                
+                <div class="price-banner__pdf-badge">
+                    <img src="src/assets/img/pdf-icon.png" alt="PDF">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

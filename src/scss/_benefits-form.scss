@@ -1,0 +1,149 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+
+.benefits-form {
+  margin-bottom: 80px;
+  padding-bottom: 150px;
+  background-color: $c-bg-light;
+  position: relative;
+    
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -70px; // Вылет вниз (или 0, если должен быть внутри)
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: url("/src/assets/img/benefits-form-bottom.png") no-repeat center bottom;
+    background-size: cover;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+
+    &__inner {
+        
+        display: flex;
+        align-items: center;
+        border-radius: rem(40);
+        padding: 0 rem(40);
+        position: relative;
+        overflow: hidden;
+        background-color: #43aaff;
+
+        @include mq($bp-lg) {
+            flex-direction: column;
+            padding: rem(40) rem(20);
+            text-align: center;
+        }
+    }
+
+    &__content {
+        flex: 1;
+        z-index: 2;
+       padding-bottom: rem(40);
+    }
+
+    &__title {
+       
+        @include fluid-font(24px, 28px);
+        font-weight: 800;
+        color: $c-white;
+        line-height: 1.4;
+        margin-bottom: rem(40);
+
+        span { font-weight: 400; opacity: 0.9; }
+    }
+
+    &__row {
+        display: flex;
+        gap: rem(15);
+        margin-bottom: rem(20);
+
+        @include mq($bp-sm) {
+            flex-direction: column;
+        }
+
+        .form__group {
+            flex: 1;
+        }
+
+        .form__input {
+            border: none;
+            border-radius: rem(100);
+            padding: rem(18) rem(30);
+            font-size: rem(16);
+            width: 100%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+    }
+
+    &__btn {
+        background-color: #FFB74D; // Оранжевый из референса
+        border-radius: rem(100);
+        padding: rem(18) rem(40);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 10px 20px rgba(255, 183, 77, 0.3);
+        align-self: flex-start;
+        white-space: nowrap;
+        
+        &:hover {
+            transform: translateY(-2px);
+            background-color: #FFB74D, 5%;
+        }
+    }
+
+    &__policy {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: rem(13);
+        
+        a {
+            color: $c-white;
+            text-decoration: underline;
+            &:hover { opacity: 0.8; }
+        }
+    }
+
+    &__visual {
+        flex: 0 0 40%;
+        display: flex;
+        justify-content: flex-end;
+        align-self: flex-end;
+
+        @include mq($bp-lg) {
+            display: none; // Скрываем девушку на мобилках для экономии места
+        }
+    }
+
+    &__image {
+        max-width: 120%; // Пусть немного выходит за края для объема
+        height: auto;
+        transform: translateY(rem(60)); // Прижимаем к низу плашки
+    }
+}
+
+.benefits-form__inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("src/assets/img/benefits-form.png") no-repeat right bottom;
+    background-size: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+
+
+// Стили для кастомного чекбокса внутри этой синей секции (белый вариант)
+.benefits-form .form__checkbox-custom {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: transparent;
+}
+
+.benefits-form .form__checkbox:checked ~ .form__checkbox-custom {
+    background-color: $c-white;
+    border-color: $c-white;
+    &::after { border-color: #5D9CEC; }
+}

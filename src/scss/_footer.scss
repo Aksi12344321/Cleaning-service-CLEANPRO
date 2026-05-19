@@ -1,0 +1,149 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.footer {
+  background-color: $c-white;
+  padding: rem(30) 0;
+  border-top: 1px solid #f1f5f9; // Легкая разделяющая черта сверху
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(30);
+
+    @include mq($bp-lg) {
+      flex-direction: column;
+      text-align: center;
+      gap: rem(25);
+    }
+  }
+
+  // Блок логотипа
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: rem(15);
+
+    @include mq($bp-lg) {
+      flex-direction: column;
+      gap: rem(10);
+    }
+  }
+
+  &__logo {
+    display: block;
+    width: rem(45);
+    height: rem(45);
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+
+  &__company-name {
+    font-family: $font-main;
+    font-size: rem(18);
+    font-weight: 700;
+    color: $c-text;
+    line-height: 1.2;
+  }
+
+  &__company-desc {
+    font-size: rem(12);
+    color: $c-text-muted;
+    margin-top: rem(2);
+  }
+
+  // Ссылки на документы
+  &__nav {
+    display: flex;
+    gap: rem(40);
+
+    @include mq($bp-xl) {
+      gap: rem(20);
+    }
+
+    @include mq($bp-md) {
+      flex-direction: column;
+      align-items: center;
+      gap: rem(12);
+    }
+  }
+
+  &__link {
+    font-size: rem(14);
+    color: $c-text;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #43aaff;
+    }
+  }
+
+  // Блок быстрой связи
+  &__contacts {
+    display: flex;
+    align-items: center;
+    gap: rem(15);
+
+    @include mq($bp-md) {
+      flex-direction: column;
+      gap: rem(10);
+    }
+  }
+
+  &__contacts-label {
+    font-size: rem(14);
+    color: $c-text;
+  }
+
+  &__socials {
+    display: flex;
+    align-items: center;
+    gap: rem(12);
+  }
+
+  &__social-link {
+    display: block;
+    width: rem(28);
+    height: rem(28);
+    transition: transform 0.3s ease;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  // Блок разработчика
+  &__dev {
+    font-size: rem(14);
+    color: $c-text;
+
+    &-text {
+      margin: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #43aaff;
+      }
+    }
+  }
+}

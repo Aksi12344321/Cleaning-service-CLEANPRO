@@ -2,35 +2,58 @@
 @use 'mixins' as *;
 
 .risks-section {
-  padding: rem(80) 0;
+  
+  position: relative;
   background: $c-bg-light;
+  
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -150px;
+    left: 0;
+    width: 100%;
+    height: rem(150);
+    background: url("/src/assets/img/risks-top.png") no-repeat center top;
+    background-size: cover;
+
+   /*  // 🔥 если нужно отражение
+    transform: scaleY(-1); */
+
+    pointer-events: none;
+    z-index: 0;
+  }
+
 
   &__header {
+    padding-top: rem(80);
     text-align: center;
     margin-bottom: rem(48);
     display: flex;
     align-items:center;
     flex-direction: column;
+    z-index: 10;
   }
 
   &__badge {
+    
     display: inline-block;
     padding: rem(10) rem(24);
     background: #ffbc42;
     border-radius: rem(30);
     color: $c-white;
     font-weight: 700;
-    margin-bottom: rem(24);
+    margin-bottom: rem(40);
     @include fluid-font(14px, 16px);
   }
 
   &__title {
-    @include fluid-font(32px, 22px);
-    font-weight: 800;
+    @include fluid-font(22px, 40px);
+    font-weight: 700;
     color: $c-text;
     max-width: rem(894);
     margin: 0 auto rem(16);
-    line-height: 150%;
+    line-height: 130%;
     text-align: center;
   }
 
@@ -56,6 +79,8 @@
     }
   }
 }
+
+
 
 .risks-card {
   background: $c-white;
