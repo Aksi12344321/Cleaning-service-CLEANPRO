@@ -2,7 +2,7 @@
 @use 'mixins' as *;
 
 .faq {
-  padding: rem(80) 0;
+  margin-bottom: rem(80);
   background-color: $c-white;
 
   &__header {
