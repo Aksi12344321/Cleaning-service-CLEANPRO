@@ -6,6 +6,10 @@
     background-color: $c-bg-light; // Светло-голубой фон на всю ширину
     position: relative;
 
+    @include mq($bp-lg) {
+        padding: rem(60) 0;
+    }
+
     &__header {
         text-align: center;
         margin-bottom: rem(60);

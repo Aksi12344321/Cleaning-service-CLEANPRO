@@ -3,111 +3,128 @@
 
 .hero {
     position: relative;
-    padding: 60px 0 140px;
+    padding: rem(80) 0 rem(120);
     z-index: 1;
     background-color: $c-bg-light;
     margin-bottom: rem(40);
+    overflow: hidden; // Защита от вылета декоративных элементов и широких картинок
 
+    @include mq($bp-lg) {
+        padding: rem(60) 0 rem(80);
+    }
 
     &__container {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 40px;
+        gap: rem(40);
 
         @include mq($bp-lg) {
             flex-direction: column;
             text-align: center;
-            gap: 40px;
+            gap: rem(30);
         }
     }
 
     &__content {
-
-        flex: 1; // Занимает доступное пространство
-        min-width: rem(550); // ГАРАНТИРУЕТ, что текст не сожмется меньше этой ширины
+        flex: 1;
+        // МАКСИМАЛЬНАЯ ширина вместо min-width, чтобы текст не растягивался соплей на ультра-широких мониторах
+        max-width: rem(620); 
         position: relative;
         z-index: 2;
       
          @include mq($bp-lg) {
-            margin-bottom: 20px;
-            text-align: center;
+            max-width: 100%;
+            width: 100%;
             display: flex;
             align-items: center;
             flex-direction: column;
         }
     }
 
- &__title {
-    // Стили которые остаются без изменений
-    font-weight: 800;
-    line-height: 1.2; // Можно также сделать плавным, если нужно
-    margin-bottom: 24px;
-    color: $c-text;
-    letter-spacing: -0.5px;
+    &__title {
+        font-weight: 800;
+        line-height: 1.25;
+        margin-bottom: rem(20);
+        color: $c-text;
+        letter-spacing: -0.5px;
+        @include fluid-font(26px, 40px);
 
-    span { 
-        color: $c-primary; 
+
+
+        span { 
+            color: $c-primary; 
+        }
+
+        // Плавный и безопасный адаптив шрифта
+        @include fluid-font(28px, 44px, 375px, 1200px);
+
+        @include mq($bp-sm) {
+            line-height: 1.3;
+        }
     }
 
-    // ПЛАВНЫЙ АДАПТИВ:
-    // Мы задаем: от 26px (на мобилке) до 44px (на десктопе)
-    // Ширины вьюпорта можно настроить под ваши брейкпоинты (375px по умолчанию, и 1200px где рост останавливается)
-    @include fluid-font(26px, 44px, 375px, 1200px);
-}
-
     &__subtitle {
-        font-size: 17px;
-        color: $c-text-muted; // Цвет 4B5258 из ТЗ
-        margin-bottom: 40px;
+        color: $c-text-muted; 
+        margin-bottom: rem(36);
         font-weight: 500;
         line-height: 1.6;
 
-        @include fluid-font(16px, 14px);
+        // Корректный вызов флюидного шрифта
+        @include fluid-font(15px, 18px, 375px, 1200px);
+
+        @include mq($bp-sm) {
+            margin-bottom: rem(28);
+        }
     }
 
     &__actions {
         display: flex;
-        gap: 20px;
+        gap: rem(16);
+        width: 100%; // Позволяет внутренним элементам растягиваться
 
-        @include mq($bp-lg) { justify-content: center; }
+        @include mq($bp-lg) { 
+            justify-content: center; 
+            max-width: rem(450); // Чтобы на планшете кнопки не были во всю ширь огромного экрана
+        }
+
         @include mq($bp-sm) {
             flex-direction: column;
-            width: 100%;
-            .btn { width: 100%; }
+            gap: rem(12);
+            max-width: 100%;
+            
+            // Жестко гарантируем, что и ссылка, и кнопка растянутся одинаково идеально
+            .btn { 
+                width: 100%; 
+                display: flex; 
+                box-sizing: border-box;
+            }
         }
     }
 
     &__image-wrapper {
         position: relative;
-        flex-shrink: 0; // Запрещаем контейнеру картинки сжиматься
-        width: 50%; // Задаем желаемую ширину (можно в px, например 600px)
+        flex: 1;
         display: flex;
         justify-content: flex-end;
-        
+        align-items: center;
+        max-width: rem(520); // Ограничиваем максимальный размер десктопной картинки
 
         @include mq($bp-lg) { 
             width: 100%; 
-            max-width: 450px; 
+            max-width: rem(380); 
             justify-content: center;
+            margin-top: rem(20);
         }
     }
 
-
-
-        &__image {
-        width: 110%; // Можно сделать чуть больше контейнера для эффекта наложения
-        max-width: none; // Позволяет картинке быть больше обертки
+    &__image {
+        width: 100%;
         height: auto;
-        object-fit: contain; // Чтобы картинка не обрезалась
-        
-        // Если нужно, чтобы картинка "свисала" вправо за пределы сетки:
-        // margin-right: rem(-100); 
+        object-fit: contain;
 
         @include mq($bp-lg) {
-            width: 100%;
-            margin-right: 0;
+            max-width: 100%;
         }
     }
-       
 }

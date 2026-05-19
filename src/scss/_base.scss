@@ -1,4 +1,5 @@
 @use 'variables' as *;
+@use 'mixins' as *;
 
 * {
     box-sizing: border-box;
@@ -7,8 +8,9 @@
 }
 
 html {
-    height: 100vh;
     scroll-behavior: smooth;
+    text-size-adjust: 100%; // Запрещает старым мобильным браузерам самовольно менять размер шрифтов
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -16,27 +18,40 @@ body {
     color: $c-text;
     background-color: $c-white;
     line-height: 1.5;
-    overflow-x: hidden;
     min-height: 100vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    -ms-overflow-style: none;  /* IE and Edge */
-   /*  scrollbar-width: none;  /* Firefox */ 
+    position: relative;
+    
+    // Надежная защита от вылетов по горизонтали для всего сайта
+    max-width: 100%;
+    overflow-x: hidden; 
+    
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    word-wrap: break-word;
+    overflow-wrap: break-word; // Разрешает перенос длинных слов на новую строку
+    hyphens: auto; 
 }
 
-body::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+// Защита от автозума Safari на iPhone и дерганья попапов
+input, textarea, select {
+    font-size: 16px !important; 
 }
 
 .wrapper {
     overflow-x: hidden;
+    width: 100%;
 }
 
 .container {
     max-width: 1064px;
     margin: 0 auto;
     padding: 0 20px;
+    
+    // На мобилках (до 480px) можно уменьшить боковые поля до 15px, чтобы контенту было просторнее
+    @include mq($bp-sm) {
+        padding: 0 15px;
+    }
 }
 
 img {
@@ -58,7 +73,7 @@ img {
     transition: all 0.3s ease;
     border: none;
     text-decoration: none;
-    color: $c-btn-text; // Белый цвет шрифта по умолчанию для кнопок
+    color: $c-btn-text; 
 
     &--primary {
         background-color: $c-primary;

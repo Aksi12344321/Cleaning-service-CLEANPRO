@@ -6,6 +6,7 @@
   margin-bottom: rem(80);
   padding-top: rem(40);
   text-align: center;
+  
 
   //------ЧТОБЫ ФОН БЫЛ СВЕРХУ ВОГНУТЫЙ (если есть картинка), и СНИЗУ------------------------
 
@@ -28,10 +29,10 @@
   &::after {
     content: "";
     position: absolute;
-    bottom: -200px; // Вылет вниз (или 0, если должен быть внутри)
+    bottom: -100px; // Вылет вниз (или 0, если должен быть внутри)
     left: 0;
     width: 100%;
-    height: 200px;
+    height: 100px;
     background: url("/src/assets/img/benefits-form-bottom.png") no-repeat center bottom;
     background-size: cover;
     pointer-events: none;
@@ -60,6 +61,7 @@
     font-weight: 700;
     color: #3f4a5a;
     margin-bottom: 15px;
+    line-height: 1.1;
   }
 
   &__subtitle {

@@ -2,65 +2,92 @@
 @use 'mixins' as *;
 
 .urgent {
-    margin-bottom: rem(80);
-  
+  margin-bottom: rem(80);
+
+  @include mq($bp-md) {
+    margin-bottom: rem(50);
+  }
   
   &__inner {
     position: relative;
-    background: url('/src/assets/img/urgent-bg.png') no-repeat 80px 0 / cover;
-    border-radius: rem(40); // Тот самый скругленный "овал"
-    padding: rem(20) rem(80);
+    background: url('/src/assets/img/urgent-bg.png') no-repeat center / cover; // Центрируем фон по умолчанию
+    border-radius: rem(40);
+    padding: rem(60) rem(80); // Равномерные паддинги на десктопе
     display: flex;
     align-items: center;
     justify-content: space-between;
-    overflow: hidden; // Чтобы пузыри и грузовик не вылетали
+    overflow: hidden;
     z-index: 1;
+    gap: rem(40);
 
-
+    @include mq($bp-xl) {
+      padding: rem(50) rem(40);
+    }
 
     @include mq($bp-lg) {
       flex-direction: column;
-      padding: rem(40) rem(30) rem(120);
+      padding: rem(40) rem(20) rem(30); // Нижний паддинг меньше, так как там будет картинка
       text-align: center;
+      gap: rem(30);
     }
   }
 
   &__content {
-    flex: 0 1 rem(520);
+    flex: 1;
+    max-width: rem(520); // Ограничиваем, чтобы текст не тянулся соплей
     z-index: 2;
-    padding-left: rem(50);
+    padding-left: 0; // Никаких жестких сдвигов влево
+
+    @include mq($bp-lg) {
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   }
 
   &__title {
-    max-width: rem(420);
     font-family: $font-main;
-    @include fluid-font(22, 30);
-    font-weight: 500;
+    @include fluid-font(20, 32, 320, 1200); // Четкие границы масштабирования
+    font-weight: 700; // Срочный выезд — сделаем акцент более жирным
     color: $c-white;
-    line-height: 1.2;
-    margin-bottom: rem(30);
+    line-height: 1.3;
+    margin-bottom: rem(24);
+    text-wrap: balance;
+
+    @include mq($bp-lg) {
+      max-width: rem(480);
+    }
   }
 
   &__btn {
-    width: rem(280) !important;
-    height: rem(64);
-    margin-bottom: rem(20);
-     @include fluid-font(12, 16);
-    font-weight: 500;
-    // Стили переиспользуются из .form-capture__btn (желтый фон, тени)
+    width: 100% !important; // На мобилках во всю ширь
+    max-width: rem(280); // Но не больше этого значения на десктопе
+    height: rem(60);
+    margin-bottom: rem(24);
+    font-size: rem(15);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    @include mq($bp-sm) {
+      max-width: 100%; // На самых маленьких экранах кнопка на всю ширину контейнера
+    }
   }
 
   &__contacts-label {
     color: $c-white;
-    font-size: rem(16);
-    margin-bottom: rem(20);
+    font-size: rem(15);
+    margin-bottom: rem(16);
     opacity: 0.9;
   }
 
   &__socials {
     display: flex;
-    gap: rem(15);
-    margin-bottom: rem(25);
+    gap: rem(12);
+    margin-bottom: rem(24);
 
     @include mq($bp-lg) {
       justify-content: center;
@@ -68,44 +95,53 @@
   }
 
   &__social-link {
-    width: rem(120);
-    height: rem(70);
-    border-radius: rem(20);
+    width: rem(100); // Чуть уменьшили, чтобы карточки не выглядели громоздко
+    height: rem(54);
+    border-radius: rem(14);
     background: $c-white;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 
     img {
-      width: rem(32);
-      height: rem(27);
+      width: rem(24);
+      height: rem(24);
+      object-fit: contain;
     }
 
     &:hover {
       transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
   }
 
   &__info {
     display: flex;
     align-items: center;
-    gap: rem(25);
+    gap: rem(20);
     color: $c-white;
 
-    @include mq($bp-lg) {
+    @include mq($bp-md) {
       flex-direction: column;
-      gap: rem(10);
+      gap: rem(12);
     }
   }
 
   &__phone {
-    font-size: rem(24);
+    font-size: rem(22);
     font-weight: 700;
     color: inherit;
     text-decoration: none;
+    transition: opacity 0.2s;
 
-    &:hover { text-decoration: underline; }
+    &:hover { 
+      opacity: 0.85;
+    }
+    
+    @include mq($bp-sm) {
+      font-size: rem(20);
+    }
   }
 
   &__hours {
@@ -114,41 +150,50 @@
     display: flex;
     align-items: center;
     gap: rem(8);
-    opacity: 0.8;
+    opacity: 0.85;
+    padding-left: rem(14); // Отступ под зеленую точку
 
     &::before {
       position: absolute;
       content: '';
-      display: inline-block;
       width: rem(7);
       height: rem(7);
       border-radius: 50%;
-      background: rgb(5, 255, 5);
-      left: rem(-5);
+      background: #00ff00;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      box-shadow: 0 0 8px #00ff00; // Легкое красивое свечение работающей точки
+    }
+    
+    @include mq($bp-md) {
+      padding-left: rem(14);
     }
   }
 
   // Правая часть с грузовиком
   &__image {
     position: absolute;
-    right: rem(-40);
-    bottom: rem(0);
-    width: 50%;
+    right: rem(-20);
+    bottom: rem(-10);
+    width: 45%;
     z-index: 1;
+    pointer-events: none; // Слайдер или клики сквозь него не будут блокироваться
 
     @include mq($bp-lg) {
       position: relative;
-      right: 0;
-      bottom: 0;
+      right: auto;
+      bottom: auto;
       width: 100%;
-      max-width: rem(500);
-      margin-top: rem(30);
+      max-width: rem(340); // Компактный размер для мобилок
+      margin: rem(20) auto 0;
     }
   }
 
   &__truck-img {
     width: 100%;
     height: auto;
+    display: block;
     object-fit: contain;
   }
 }
