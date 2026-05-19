@@ -58,7 +58,8 @@
                 data-modal-success-title="Спасибо за заявку!"
                 data-modal-success-text="Чтобы получить скидку 10%, назовите менеджеру промокод SAVE10."
                 data-show-promo="true">Рассчитать стоимость</button>
-                <button class="btn btn--secondary">Выбрать вид уборки</button>
+                <a class="btn btn--secondary" href="#services">Выбрать вид уборки</a>
+        
             </div>
         </div>
        <div class="hero__image-wrapper">
@@ -129,14 +130,14 @@
             <li class="nav-menu__item"><a href="#services" class="nav-menu__link">Услуги</a></li>
             <li class="nav-menu__item"><a href="#calc" class="nav-menu__link">Рассчитать стоимость</a></li>
             <!-- Активный пункт по референсу -->
-            <li class="nav-menu__item"><a href="#why-us" class="nav-menu__link nav-menu__link--active">Почему мы</a></li>
+            <li class="nav-menu__item"><a href="#benefits" class="nav-menu__link">Почему мы</a></li>
             <li class="nav-menu__item"><a href="#how" class="nav-menu__link">Как мы делаем уборку</a></li>
-            <li class="nav-menu__item"><a href="#reviews" class="nav-menu__link">Отзывы</a></li>
+            <li class="nav-menu__item"><a href="#cases" class="nav-menu__link">Работы</a></li>
             <li class="nav-menu__item"><a href="#promo" class="nav-menu__link">Акции</a></li>
         </ul>
     </div>
 </nav>
-            <section class="calc-banner">
+            <section class="calc-banner" id="calc">
     <div class="container">
         <div class="calc-banner__inner">
 
@@ -407,7 +408,7 @@
 
  
 </section>
-            <section class="benefits-section">
+            <section class="benefits-section" id="benefits">
     <div class="container">
         <div class="benefits-section__header">
             <h2 class="benefits-section__title">Наша работа построена на профессионализме и честности</h2>
@@ -492,7 +493,7 @@
     </div>
  
 </section>
-            <section class="services">
+            <section class="services" id="services">
     <div class="container">
         <header class="services__header">
             <h2 class="services__title"><span>6 видов уборки</span> под любую Вашу задачу</h2>
@@ -770,7 +771,7 @@
         </div>
     </div>
 </section>
-            <section class="how-we-clean">
+            <section class="how-we-clean" id="how">
   <div class="container">
     <div class="how-we-clean__header">
       <h2 class="how-we-clean__title">Посмотрите наглядно как мы делаем уборку</h2>
@@ -968,7 +969,7 @@
     </div>
   </div>
 </section>
-            <section class="cases">
+            <section class="cases" id="cases">
   <div class="container">
     <div class="cases__header">
       <h2 class="cases__title">Исполним уборку любой сложности</h2>
@@ -1230,7 +1231,7 @@
     </div>
   </div>
 </section>
-            <section class="gifts">
+            <section class="gifts" id="promo">
   <div class="container">
     <div class="gifts__inner">
         <h2 class="gifts__title">Выберите подарок и закажите бережную уборку, без наценок и скрытых платежей</h2>
@@ -1487,6 +1488,11 @@
   </div>
 </footer>
         </main>
+    <button class="back-to-top" id="backToTop" aria-label="Вернуться наверх">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
     </div>
 
     
