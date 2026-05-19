@@ -124,6 +124,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+   // ==========================================
+    // ЛОГИКА МОБИЛЬНОГО БУРГЕР-МЕНЮ (БЕЗ БЛОКИРОВКИ СКРОЛЛА)
+    // ==========================================
+    const navMenu = document.querySelector('.nav-menu');
+    const burgerBtn = document.querySelector('.nav-menu__burger');
+    const menuLinks = document.querySelectorAll('.nav-menu__link');
+
+    if (burgerBtn && navMenu) {
+        // 1. Тогглим меню при клике на сам бургер
+        burgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Предотвращаем срабатывание клика по документу
+            navMenu.classList.toggle('nav-menu--active');
+        });
+
+        // 2. Автоматически закрываем меню при клике на любой пункт
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('nav-menu--active');
+            });
+        });
+
+        // 3. Закрываем меню, если кликнули в любое другое место экрана мимо меню
+        document.addEventListener('click', (e) => {
+            if (!navMenu.contains(e.target) && navMenu.classList.contains('nav-menu--active')) {
+                navMenu.classList.remove('nav-menu--active');
+            }
+        });
+    }
+
     // --- ЛОГИКА БАННЕРА ПРАЙС-ЛИСТА ---
     const priceForm = document.getElementById('priceForm');
     if (priceForm) {

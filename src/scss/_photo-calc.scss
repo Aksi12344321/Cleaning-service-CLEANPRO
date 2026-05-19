@@ -9,6 +9,10 @@
   overflow: hidden;
   z-index: 1;
 
+   @include mq($bp-xl) {
+      margin-bottom: rem(40); 
+    }
+
   &::before {
     content: '';
     position: absolute;
@@ -29,9 +33,11 @@
 
     z-index: -1;
 
+  
     @include mq($bp-lg) {
       width: 250%;
       border-radius: 50% / 15%;
+      
     }
   }
 

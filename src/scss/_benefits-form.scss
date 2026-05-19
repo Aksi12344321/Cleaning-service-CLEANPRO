@@ -21,6 +21,12 @@
     z-index: 0;
   }
 
+  @include mq($bp-lg) {
+    padding-bottom: 80px;
+  }
+  @include mq($bp-md) {
+    padding-bottom: 40px;
+  }
 
     &__inner {
         

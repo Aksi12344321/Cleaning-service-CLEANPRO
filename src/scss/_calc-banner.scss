@@ -3,6 +3,9 @@
 
 .calc-banner {
    margin-bottom: rem(140);
+   @include mq($bp-lg) {
+    margin-bottom: rem(80);
+   }
 
     &__inner {
         text-align: center;

@@ -25,7 +25,7 @@
         flex-direction: column;
         justify-content: space-around;
         width: 30px;
-        height: 24px;
+        height: 25px;
         background: transparent;
         border: none;
         cursor: pointer;
@@ -81,8 +81,8 @@
         &::-webkit-scrollbar { display: none; }
 
         // --- АДАПТИВ: ПЛАНШЕТЫ И ТЕЛЕФОНЫ ---
+        // --- АДАПТИВ: ПЛАНШЕТЫ И ТЕЛЕФОНЫ ---
         @include mq($bp-lg) {
-            // Убираем стили десктопной таблетки
             justify-content: flex-start;
             align-items: stretch;
             gap: 0;
@@ -92,11 +92,14 @@
             background-color: transparent;
             box-shadow: none;
             border-radius: 0;
-            overflow: hidden;
+            
+            // --- ДОБАВЛЯЕМ БЕЗОПАСНЫЙ СКРОЛЛ ДЛЯ МЕНЮ ---
+            max-height: 70vh; // Меню никогда не займет больше 70% высоты экрана
+            overflow-y: auto; // Если пункты не влезают, внутри меню появится аккуратный скролл
             
             // Делаем выпадающий блок
             position: absolute;
-            top: 100%; // Прилипает к низу родителя
+            top: 100%; 
             left: 0;
             width: 100%;
             background-color: $c-white;
@@ -107,7 +110,7 @@
             // СКРЫТОЕ СОСТОЯНИЕ (по умолчанию)
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-10px); // Поднято вверх на 10px
+            transform: translateY(-10px); 
             transition: all 0.3s ease;
         }
     }

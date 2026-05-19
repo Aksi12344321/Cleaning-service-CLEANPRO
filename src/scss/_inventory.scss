@@ -7,6 +7,10 @@
   background-color: $c-white;
   overflow: hidden; // Чтобы орбиты не создавали скролл
 
+  @include mq($bp-lg) {
+   padding-bottom: rem(10);
+  }
+
   &__header {
     text-align: center;
     margin-bottom: rem(60);

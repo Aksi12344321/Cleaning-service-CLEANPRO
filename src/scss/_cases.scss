@@ -6,7 +6,7 @@
 ========================================= */
 
 .cases {
-  padding: rem(80) rem(40);
+  padding: rem(100) rem(40);
   background: $c-white;
 
   &__header {
@@ -291,9 +291,12 @@
    MOBILE
 ========================================= */
 
-@include mq($bp-lg) {
+@include mq($bp-xl) {
   .cases {
-    padding: rem(60) rem(20);
+    padding-top: rem(160);
+    padding-left: rem(20);
+    padding-right: rem(20);
+    padding-bottom: rem(80);
   }
 
   .cases-slider {
@@ -304,12 +307,8 @@
     width: rem(46);
     height: rem(46);
   }
-}
 
-@include mq($bp-md) {
-  .cases {
-    padding: rem(60) rem(15);
-  }
+
 
   .cases-slider {
     padding-inline: rem(45);

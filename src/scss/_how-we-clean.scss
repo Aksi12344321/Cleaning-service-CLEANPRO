@@ -38,6 +38,13 @@
     z-index: 0;
   }
 
+  @include mq($bp-lg) {
+    padding-top: rem(20); 
+    margin-bottom: rem(40); 
+    
+    
+   
+  }
   //----------------------------------------------------------------------------
 
   &__header {
@@ -62,14 +69,18 @@
 }
 
 .tabs {
+  
   &__nav {
     display: inline-flex;
     border-radius: 50px;
     margin-bottom: 50px;
     box-shadow: 0 0 20px 0 rgba(29, 31, 33, 0.12);
     background: #fff;
+
+    
   }
 
+  
   &__btn {
     border: none;
     background: none;
