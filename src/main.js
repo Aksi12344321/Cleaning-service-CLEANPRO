@@ -528,19 +528,106 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const compareSliders = document.querySelectorAll('.compare__slider');
-    compareSliders.forEach(slider => {
-        slider.addEventListener('input', (e) => {
-            const value = e.target.value;
-            const container = slider.closest('.compare');
-            const beforeImg = container.querySelector('.compare__before');
-            const handle = container.querySelector('.compare__handle');
+    // ==========================================
+    // ЛОГИКА ДО/ПОСЛЕ (БЕЗ КОНФЛИКТА С СВРAЙПАМИ)
+    // ==========================================
+// ==========================================
+    // ЛОГИКА ДО/ПОСЛЕ (БЕЗ КОНФЛИКТА С СВРAЙПАМИ)
+    // ==========================================
+    const compares = document.querySelectorAll('.compare');
 
-            if (beforeImg) beforeImg.style.clipPath = `inset(0 ${100 - value}% 0 0)`;
-            if (handle) handle.style.left = `${value}%`;
+    compares.forEach(container => {
+        const handle = container.querySelector('.compare__handle');
+        const beforeImg = container.querySelector('.compare__before');
+        let isMoving = false;
+
+        // Функция обновления шторки
+        const updateSplit = (percent) => {
+            const validatedPercent = Math.max(0, Math.min(100, percent));
+            handle.style.left = `${validatedPercent}%`;
+            beforeImg.style.clipPath = `inset(0 ${100 - validatedPercent}% 0 0)`;
+        };
+
+        // --- ДЕСКТОП (Мышь) ---
+        
+        // Триггером старта теперь является наведение на сам кружок/линию!
+        handle.addEventListener('mouseenter', () => {
+            isMoving = true;
+            
+            // Убираем transition, чтобы шторка сразу же и отзывчиво следовала за мышью
+            handle.style.transition = 'none';
+            beforeImg.style.transition = 'none';
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            // Если на кружок не наводили — игнорируем движение по картинке
+            if (!isMoving) return;
+
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percent = (x / rect.width) * 100;
+            
+            updateSplit(percent);
+        });
+
+        // Сброс происходит только когда мышка полностью покинула область карточки
+        container.addEventListener('mouseleave', () => {
+            isMoving = false;
+            
+            // Возвращаем плавный transition для красивого возврата ползунка в центр
+            handle.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            beforeImg.style.transition = 'clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            
+            updateSplit(50);
+        });
+
+        // --- МОБИЛЬНЫЕ (Тач) ---
+        // На мобилках логика аналогичная: тач должен начаться именно на кружке,
+        // чтобы не ломать нативный скролл страницы при перемещении пальца по фото.
+        
+        handle.addEventListener('touchstart', (e) => {
+            isMoving = true;
+            
+            handle.style.transition = 'none';
+            beforeImg.style.transition = 'none';
+
+            const rect = container.getBoundingClientRect();
+            const x = e.touches[0].clientX - rect.left;
+            const percent = (x / rect.width) * 100;
+            
+            updateSplit(percent);
+        }, { passive: true });
+
+        container.addEventListener('touchmove', (e) => {
+            if (!isMoving) return;
+
+            const rect = container.getBoundingClientRect();
+            const x = e.touches[0].clientX - rect.left;
+            const percent = (x / rect.width) * 100;
+            
+            updateSplit(percent);
+        }, { passive: true });
+
+        container.addEventListener('touchend', () => {
+            if (!isMoving) return;
+            isMoving = false;
+
+            handle.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            beforeImg.style.transition = 'clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            
+            updateSplit(50);
+        });
+        
+        container.addEventListener('touchcancel', () => {
+            if (!isMoving) return;
+            isMoving = false;
+
+            handle.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            beforeImg.style.transition = 'clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            
+            updateSplit(50);
         });
     });
-
     // ==========================================
     // КНОПКА ВВЕРХ
     // ==========================================

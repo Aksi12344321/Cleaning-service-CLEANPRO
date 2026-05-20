@@ -8,18 +8,22 @@
     <div class="swiper cases-slider">
       <div class="swiper-wrapper">
         
-        <!-- Слайд 1: Ванная (из референса) -->
         <div class="swiper-slide">
           <div class="case-card">
             <div class="compare">
               <div class="compare__images">
                 <img src="src/assets/img/after-1.jpg" alt="После" class="compare__img compare__img--after">
-                <div class="compare__before" style="clip-path: inset(0 50% 0 0);">
+                <div class="compare__before">
                   <img src="src/assets/img/before-1.jpg" alt="До" class="compare__img compare__img--before">
                 </div>
               </div>
-              <input type="range" min="0" max="100" value="50" class="compare__slider">
-              <div class="compare__handle" style="left: 50%;">
+              
+              <div class="compare__badges">
+                <span class="compare__badge compare__badge--before">До</span>
+                <span class="compare__badge compare__badge--after">После</span>
+              </div>
+              
+              <div class="compare__handle">
                 <div class="compare__handle-circle">
                   <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5L5 1M1 5L5 9M1 5H13M13 5L9 1M13 5L9 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
@@ -29,7 +33,7 @@
             <div class="case-card__content">
               <h3 class="case-card__title">Объект: однокомнатная квартира</h3>
               <ul class="case-card__list">
-                <li><span>Пакет:</span> Генеральная уборка</li>
+                <li><span>Пакет:</span> Generalьная уборка</li>
                 <li><span>Площадь:</span> 32 м2</li>
                 <li><span>Сложные:</span> ржавчина, налет на ванне</li>
                 <li><span>Время работы:</span> 4 часа</li>
@@ -40,18 +44,22 @@
           </div>
         </div>
 
-        <!-- Слайд 2: Кухня -->
         <div class="swiper-slide">
           <div class="case-card">
             <div class="compare">
               <div class="compare__images">
                 <img src="src/assets/img/after-2.jpg" alt="После" class="compare__img compare__img--after">
-                <div class="compare__before" style="clip-path: inset(0 50% 0 0);">
+                <div class="compare__before">
                   <img src="src/assets/img/before-2.jpg" alt="До" class="compare__img compare__img--before">
                 </div>
               </div>
-              <input type="range" min="0" max="100" value="50" class="compare__slider">
-              <div class="compare__handle" style="left: 50%;">
+              
+              <div class="compare__badges">
+                <span class="compare__badge compare__badge--before">До</span>
+                <span class="compare__badge compare__badge--after">После</span>
+              </div>
+              
+              <div class="compare__handle">
                 <div class="compare__handle-circle">
                   <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5L5 1M1 5L5 9M1 5H13M13 5L9 1M13 5L9 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
@@ -72,18 +80,22 @@
           </div>
         </div>
 
-        <!-- Слайд 3: Санузел -->
         <div class="swiper-slide">
           <div class="case-card">
             <div class="compare">
               <div class="compare__images">
                 <img src="src/assets/img/after-3.jpg" alt="После" class="compare__img compare__img--after">
-                <div class="compare__before" style="clip-path: inset(0 50% 0 0);">
+                <div class="compare__before">
                   <img src="src/assets/img/before-3.jpg" alt="До" class="compare__img compare__img--before">
                 </div>
               </div>
-              <input type="range" min="0" max="100" value="50" class="compare__slider">
-              <div class="compare__handle" style="left: 50%;">
+              
+              <div class="compare__badges">
+                <span class="compare__badge compare__badge--before">До</span>
+                <span class="compare__badge compare__badge--after">После</span>
+              </div>
+              
+              <div class="compare__handle">
                 <div class="compare__handle-circle">
                   <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5L5 1M1 5L5 9M1 5H13M13 5L9 1M13 5L9 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
@@ -104,18 +116,19 @@
           </div>
         </div>
 
-        <!-- Слайд 4: Спальня -->
         <div class="swiper-slide">
           <div class="case-card">
             <div class="compare">
               <div class="compare__images">
                 <img src="src/assets/img/after-4.jpg" alt="После" class="compare__img compare__img--after">
-                <div class="compare__before" style="clip-path: inset(0 50% 0 0);">
+                <div class="compare__before">
                   <img src="src/assets/img/before-4.jpg" alt="До" class="compare__img compare__img--before">
                 </div>
               </div>
-              <input type="range" min="0" max="100" value="50" class="compare__slider">
-              <div class="compare__handle" style="left: 50%;">
+              
+         
+              
+              <div class="compare__handle">
                 <div class="compare__handle-circle">
                   <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5L5 1M1 5L5 9M1 5H13M13 5L9 1M13 5L9 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
@@ -138,17 +151,13 @@
 
       </div>
 
-      <!-- Навигация -->
-     <!-- Кнопка "Назад" -->
-<div class="cases-slider__btn cases-slider__btn--prev">
-  <!-- Можно вставить SVG кодом для гибкости -->
-  <img src="src/assets/img/left-arrow.svg" alt="Назад">
-</div>
+      <div class="cases-slider__btn cases-slider__btn--prev">
+        <img src="src/assets/img/left-arrow.svg" alt="Назад">
+      </div>
 
-<!-- Кнопка "Вперед" -->
-<div class="cases-slider__btn cases-slider__btn--next">
- <img src="src/assets/img/right-arrow.svg" alt="Вперёд">
-</div>
+      <div class="cases-slider__btn cases-slider__btn--next">
+        <img src="src/assets/img/right-arrow.svg" alt="Вперёд">
+      </div>
       <div class="swiper-pagination"></div>
     </div>
   </div>

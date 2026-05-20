@@ -87,6 +87,7 @@
 
     @include mq($bp-lg) {
       margin-bottom: rem(30);
+      text-align: center;
     }
   }
 
@@ -113,6 +114,8 @@
     color: $c-text;
     margin-bottom: rem(20);
     font-weight: 500;
+
+    @include mq($bp-sm){text-align: center;}
   }
 
   &__socials {
@@ -121,20 +124,23 @@
     margin-bottom: rem(20);
 
     @include mq($bp-sm) {
-      flex-direction: column;
+      
+      justify-content: center; // Центрируем по середине
+      flex-direction: row;
+      justify-content: center; // Центрируем по середине
+      align-items: center;
     }
   }
 
   &__link {
     flex: 1;
+    height: rem(50);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    height: rem(56);
-
-    border-radius: rem(12);
+    border-radius: rem(18);
 
     transition:
       transform 0.2s ease,
@@ -142,6 +148,12 @@
 
     img {
       width: rem(30);
+    }
+
+      @include mq($bp-sm) {
+    
+      max-width: rem(140);
+      padding: 20px;
     }
 
     &--tg {
