@@ -226,6 +226,9 @@
 ========================================= */
 
 .compare {
+  .compare {
+  touch-action: pan-y;
+}
   position: relative;
   width: rem(460);
   height: rem(360);
@@ -276,6 +279,9 @@
   }
 
   &__handle {
+    .compare__handle {
+  touch-action: none;
+}
     position: absolute;
     top: 0;
     bottom: 0;

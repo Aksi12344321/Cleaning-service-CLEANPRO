@@ -529,105 +529,79 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // ЛОГИКА ДО/ПОСЛЕ (БЕЗ КОНФЛИКТА С СВРAЙПАМИ)
-    // ==========================================
+// ЛОГИКА ДО/ПОСЛЕ (БЕЗ КОНФЛИКТА С SWIPER)
 // ==========================================
-    // ЛОГИКА ДО/ПОСЛЕ (БЕЗ КОНФЛИКТА С СВРAЙПАМИ)
+const compares = document.querySelectorAll('.compare');
+
+compares.forEach(container => {
+    const handle = container.querySelector('.compare__handle');
+    const beforeImg = container.querySelector('.compare__before');
+
+    let isMoving = false;
+
+    // Функция обновления положения
+    const updateSplit = (percent) => {
+        const validatedPercent = Math.max(0, Math.min(100, percent));
+
+        handle.style.left = `${validatedPercent}%`;
+        beforeImg.style.clipPath = `inset(0 ${100 - validatedPercent}% 0 0)`;
+    };
+
     // ==========================================
-    const compares = document.querySelectorAll('.compare');
+    // POINTER EVENTS (мышь + touchpad + touch)
+    // ==========================================
 
-    compares.forEach(container => {
-        const handle = container.querySelector('.compare__handle');
-        const beforeImg = container.querySelector('.compare__before');
-        let isMoving = false;
+    handle.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
 
-        // Функция обновления шторки
-        const updateSplit = (percent) => {
-            const validatedPercent = Math.max(0, Math.min(100, percent));
-            handle.style.left = `${validatedPercent}%`;
-            beforeImg.style.clipPath = `inset(0 ${100 - validatedPercent}% 0 0)`;
-        };
+        isMoving = true;
 
-        // --- ДЕСКТОП (Мышь) ---
-        
-        // Триггером старта теперь является наведение на сам кружок/линию!
-        handle.addEventListener('mouseenter', () => {
-            isMoving = true;
-            
-            // Убираем transition, чтобы шторка сразу же и отзывчиво следовала за мышью
-            handle.style.transition = 'none';
-            beforeImg.style.transition = 'none';
-        });
+        // отключаем свайп swiper
+        swiper.allowTouchMove = false;
 
-        container.addEventListener('mousemove', (e) => {
-            // Если на кружок не наводили — игнорируем движение по картинке
-            if (!isMoving) return;
+        // убираем transition во время движения
+        handle.style.transition = 'none';
+        beforeImg.style.transition = 'none';
 
-            const rect = container.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const percent = (x / rect.width) * 100;
-            
-            updateSplit(percent);
-        });
+        // захватываем pointer
+        handle.setPointerCapture(e.pointerId);
 
-        // Сброс происходит только когда мышка полностью покинула область карточки
-        container.addEventListener('mouseleave', () => {
-            isMoving = false;
-            
-            // Возвращаем плавный transition для красивого возврата ползунка в центр
-            handle.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            beforeImg.style.transition = 'clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            
-            updateSplit(50);
-        });
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percent = (x / rect.width) * 100;
 
-        // --- МОБИЛЬНЫЕ (Тач) ---
-        // На мобилках логика аналогичная: тач должен начаться именно на кружке,
-        // чтобы не ломать нативный скролл страницы при перемещении пальца по фото.
-        
-        handle.addEventListener('touchstart', (e) => {
-            isMoving = true;
-            
-            handle.style.transition = 'none';
-            beforeImg.style.transition = 'none';
-
-            const rect = container.getBoundingClientRect();
-            const x = e.touches[0].clientX - rect.left;
-            const percent = (x / rect.width) * 100;
-            
-            updateSplit(percent);
-        }, { passive: true });
-
-        container.addEventListener('touchmove', (e) => {
-            if (!isMoving) return;
-
-            const rect = container.getBoundingClientRect();
-            const x = e.touches[0].clientX - rect.left;
-            const percent = (x / rect.width) * 100;
-            
-            updateSplit(percent);
-        }, { passive: true });
-
-        container.addEventListener('touchend', () => {
-            if (!isMoving) return;
-            isMoving = false;
-
-            handle.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            beforeImg.style.transition = 'clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            
-            updateSplit(50);
-        });
-        
-        container.addEventListener('touchcancel', () => {
-            if (!isMoving) return;
-            isMoving = false;
-
-            handle.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            beforeImg.style.transition = 'clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            
-            updateSplit(50);
-        });
+        updateSplit(percent);
     });
+
+    container.addEventListener('pointermove', (e) => {
+        if (!isMoving) return;
+
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percent = (x / rect.width) * 100;
+
+        updateSplit(percent);
+    });
+
+    const stopMoving = () => {
+        if (!isMoving) return;
+
+        isMoving = false;
+
+        // возвращаем swiper
+        swiper.allowTouchMove = true;
+
+        // возвращаем плавность
+        handle.style.transition = 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+        beforeImg.style.transition = 'clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    };
+
+    window.addEventListener('pointerup', stopMoving);
+    window.addEventListener('pointercancel', stopMoving);
+
+    // стартовое положение
+    updateSplit(50);
+});
     // ==========================================
     // КНОПКА ВВЕРХ
     // ==========================================
