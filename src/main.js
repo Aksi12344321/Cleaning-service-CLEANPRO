@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Email ОБЯЗАТЕЛЕН и должен соответствовать регулярке
             const isEmailValid = emailRegex.test(emailInput.value.trim()); 
-            
             const isConsentValid = consentCheckbox.checked;
 
             // Логика отображения ошибок (только если поле "тронуто")
@@ -49,12 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return canSubmit;
         }
 
-        // Слушатели для активации статуса "touched" (чтобы ошибки не висели сразу)
+        // Слушатели для активации статуса "touched"
         nameInput.addEventListener('blur', () => { touched.name = true; validateModal(); });
         phoneInput.addEventListener('blur', () => { touched.phone = true; validateModal(); });
         emailInput.addEventListener('blur', () => { touched.email = true; validateModal(); });
         
-        // Для email включаем показ ошибки быстрее, если пользователь начал вводить данные
         emailInput.addEventListener('input', () => {
             if (emailInput.value.trim().length > 5) touched.email = true; 
             validateModal();
@@ -104,9 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // На всякий случай помечаем всё как touched перед отправкой
             Object.keys(touched).forEach(k => touched[k] = true);
-            
             if (!validateModal()) return;
 
             submitBtn.textContent = 'ОТПРАВКА...';
@@ -124,28 +120,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-   // ==========================================
-    // ЛОГИКА МОБИЛЬНОГО БУРГЕР-МЕНЮ (БЕЗ БЛОКИРОВКИ СКРОЛЛА)
+    // ==========================================
+    // ЛОГИКА МОБИЛЬНОГО БУРГЕР-МЕНЮ
     // ==========================================
     const navMenu = document.querySelector('.nav-menu');
     const burgerBtn = document.querySelector('.nav-menu__burger');
     const menuLinks = document.querySelectorAll('.nav-menu__link');
 
     if (burgerBtn && navMenu) {
-        // 1. Тогглим меню при клике на сам бургер
         burgerBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Предотвращаем срабатывание клика по документу
+            e.stopPropagation(); 
             navMenu.classList.toggle('nav-menu--active');
         });
 
-        // 2. Автоматически закрываем меню при клике на любой пункт
         menuLinks.forEach(link => {
             link.addEventListener('click', () => {
                 navMenu.classList.remove('nav-menu--active');
             });
         });
 
-        // 3. Закрываем меню, если кликнули в любое другое место экрана мимо меню
         document.addEventListener('click', (e) => {
             if (!navMenu.contains(e.target) && navMenu.classList.contains('nav-menu--active')) {
                 navMenu.classList.remove('nav-menu--active');
@@ -153,7 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- ЛОГИКА БАННЕРА ПРАЙС-ЛИСТА ---
+    // ==========================================
+    // ЛОГИКА БАННЕРА ПРАЙС-ЛИСТА
+    // ==========================================
     const priceForm = document.getElementById('priceForm');
     if (priceForm) {
         const pricePhoneInput = priceForm.querySelector('[name="user_phone"]');
@@ -200,162 +195,159 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- УТИЛИТЫ ---
-    function applyPhoneMask(input) {
-        let matrix = "+7 (___) ___-__-__",
-            i = 0,
-            def = matrix.replace(/\D/g, ""),
-            val = input.value.replace(/\D/g, "");
-        if (def.length >= val.length) val = def;
-        input.value = matrix.replace(/./g, function(a) {
-            return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a;
+    // ==========================================
+    // ЛОГИКА БАННЕРА КАЛЬКУЛЯТОРА
+    // ==========================================
+    const calcBannerForm = document.getElementById('calcBannerForm');
+    if (calcBannerForm) {
+        const cbPhoneInput = calcBannerForm.querySelector('[name="user_phone"]');
+        const cbConsentCheckbox = calcBannerForm.querySelector('[name="consent_data"]');
+        const cbSubmitBtn = calcBannerForm.querySelector('.calc-banner__btn');
+        const cbTouched = { phone: false, consent: false };
+
+        function validateCalcBannerForm() {
+            const isPhoneValid = cbPhoneInput.value.replace(/\D/g, "").length === 11;
+            const isConsentValid = cbConsentCheckbox.checked;
+
+            toggleError(cbPhoneInput, 'Неполный номер', !isPhoneValid && cbTouched.phone);
+            toggleError(cbConsentCheckbox, '', !isConsentValid && cbTouched.consent);
+
+            cbSubmitBtn.disabled = !(isPhoneValid && isConsentValid);
+            return isPhoneValid && isConsentValid;
+        }
+
+        cbPhoneInput.addEventListener('blur', () => { cbTouched.phone = true; validateCalcBannerForm(); });
+        cbConsentCheckbox.addEventListener('change', () => { cbTouched.consent = true; validateCalcBannerForm(); });
+
+        calcBannerForm.addEventListener('input', (e) => {
+            if (e.target.name === 'user_phone') applyPhoneMask(e.target);
+            validateCalcBannerForm();
+        });
+
+        calcBannerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!validateCalcBannerForm()) return;
+
+            cbSubmitBtn.textContent = 'ОБРАБОТКА...';
+            cbSubmitBtn.disabled = true;
+
+            setTimeout(() => {
+                if (modal) {
+                    const modalTitle = modal.querySelector('.modal__title');
+                    const modalFormWrapper = modal.querySelector('.modal__form-wrapper');
+                    const modalSuccessBlock = modal.querySelector('.modal__success');
+                    const modalPhoneInput = modal.querySelector('[name="user_phone"]');
+                    const modalServiceInput = modal.querySelector('[name="service_name"]');
+
+                    if (modalTitle) modalTitle.textContent = "Расчёт из калькулятора";
+                    if (modalServiceInput) modalServiceInput.value = "Расчёт из калькулятора";
+                    if (modalPhoneInput) modalPhoneInput.value = cbPhoneInput.value;
+
+                    if (modalFormWrapper) modalFormWrapper.style.display = 'block';
+                    if (modalSuccessBlock) modalSuccessBlock.classList.remove('modal__success--active');
+
+                    if (typeof touched !== 'undefined') {
+                        Object.keys(touched).forEach(key => touched[key] = false);
+                        touched.phone = true; 
+                    }
+
+                    if (typeof validateModal === 'function') validateModal();
+
+                    modal.classList.add('modal--active');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                calcBannerForm.reset();
+                cbTouched.phone = false;
+                cbTouched.consent = false;
+                cbSubmitBtn.textContent = 'ПОЛУЧИТЬ РАСЧЁТ И БОНУСЫ';
+                validateCalcBannerForm();
+            }, 600);
         });
     }
 
-    function toggleError(input, message, isError) {
-        const group = input.closest('.form__group') || input.closest('.form__checkbox-label') || input.closest('.form-capture__field') || input.closest('.checkbox');
-        if (!group) return;
+    // ==========================================
+    // ЛОГИКА СЕКЦИИ КОНСУЛЬТАЦИИ (BENEFITS-FORM) -> СРАЗУ УСПЕХ
+    // ==========================================
+    const mainSectionForm = document.getElementById('mainSectionForm');
+    if (mainSectionForm) {
+        const msPhoneInput = mainSectionForm.querySelector('[name="user_phone"]');
+        const msConsentCheckbox = mainSectionForm.querySelector('[name="consent_data"]');
+        const msSubmitBtn = mainSectionForm.querySelector('.benefits-form__btn');
+        const msTouched = { phone: false, consent: false };
 
-        const errorClass = input.type === 'checkbox' ? 'form__checkbox-label--error' : 'form__group--error';
-        
-        if (isError) {
-            group.classList.add(errorClass);
-            if (input.type !== 'checkbox' && !group.querySelector('.form__error')) {
-                const error = document.createElement('span');
-                error.className = 'form__error';
-                error.textContent = message;
-                group.appendChild(error);
-            }
-        } else {
-            group.classList.remove(errorClass);
-            const errorText = group.querySelector('.form__error');
-            if (errorText) errorText.remove();
+        function validateMainSectionForm() {
+            const isPhoneValid = msPhoneInput.value.replace(/\D/g, "").length === 11;
+            const isConsentValid = msConsentCheckbox.checked;
+
+            toggleError(msPhoneInput, 'Неполный номер', !isPhoneValid && msTouched.phone);
+            toggleError(msConsentCheckbox, '', !isConsentValid && msTouched.consent);
+
+            msSubmitBtn.disabled = !(isPhoneValid && isConsentValid);
+            return isPhoneValid && isConsentValid;
         }
+
+        msPhoneInput.addEventListener('blur', () => { msTouched.phone = true; validateMainSectionForm(); });
+        msConsentCheckbox.addEventListener('change', () => { msTouched.consent = true; validateMainSectionForm(); });
+
+        mainSectionForm.addEventListener('input', (e) => {
+            if (e.target.name === 'user_phone') applyPhoneMask(e.target);
+            validateMainSectionForm();
+        });
+
+        mainSectionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!validateMainSectionForm()) return;
+
+            msSubmitBtn.textContent = 'ОТПРАВКА...';
+            msSubmitBtn.disabled = true;
+
+            setTimeout(() => {
+                const formData = new FormData(mainSectionForm);
+                console.log("Данные из секции консультации:", Object.fromEntries(formData));
+
+                // Сбрасываем и очищаем форму на странице
+                mainSectionForm.reset();
+                msTouched.phone = false;
+                msTouched.consent = false;
+                msSubmitBtn.textContent = 'ЖДУ ЗВОНКА';
+                validateMainSectionForm();
+
+                // Открываем модалку ОРАЗУ в состоянии успешной отправки
+                if (modal) {
+                    const modalTitle = modal.querySelector('.modal__title');
+                    const modalFormWrapper = modal.querySelector('.modal__form-wrapper');
+                    const modalSuccessBlock = modal.querySelector('.modal__success');
+
+                    if (modalTitle) modalTitle.textContent = 'Заявка принята!';
+                    if (modalFormWrapper) modalFormWrapper.style.display = 'none'; // Прячем инпуты модалки
+                    if (modalSuccessBlock) modalSuccessBlock.classList.add('modal__success--active'); // Показываем окно успеха
+
+                    modal.classList.add('modal--active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }, 1000);
+        });
+
+        // Первичная инициализация состояния кнопки
+        validateMainSectionForm();
     }
 
-    //-----ПЕРЕКЛЮЧАТЕЛЬ ТАБОВ-----
-
-    const tabBtns = document.querySelectorAll('.tabs__btn');
-    const tabPanes = document.querySelectorAll('.tabs__pane');
-
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const target = btn.getAttribute('data-tab');
-
-            // Убираем активные классы
-            tabBtns.forEach(b => b.classList.remove('tabs__btn--active'));
-            tabPanes.forEach(p => p.classList.remove('tabs__pane--active'));
-
-            // Добавляем активные классы
-            btn.classList.add('tabs__btn--active');
-            document.getElementById(target).classList.add('tabs__pane--active');
-        });
-    });
-
-    //------------------ДО/ПОСЛЕ+СЛАЙДЕР
-
-    // 1. Инициализация слайдера
-    const swiper = new Swiper('.cases-slider', {
-        // Это заставит обертку растягивать слайды до高度 самого высокого
-        autoHeight: false, 
-
-        // Плавность переключений
-        speed: 800,
-        grabCursor: true,
-        slidesPerView: 1,
-        spaceBetween: 30,
-        loop: true,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-       navigation: {
-       nextEl: '.cases-slider__btn--next',
-       prevEl: '.cases-slider__btn--prev',
-},
-
-        breakpoints: {
-            // Когда экран >= 320px
-            320: {
-                spaceBetween: 10
-            },
-            // Когда экран >= 768px
-            768: {
-                spaceBetween: 20
-            },
-            // Когда экран >= 1200px
-            1200: {
-                spaceBetween: 30
-            }
-        }
-    });
-
-    // Инициализация слайдера сертификатов
-    const certsSwiper = new Swiper('.certs-slider', {
-        speed: 600,
-        grabCursor: true,
-        loop: true, // Включаем бесконечную прокрутку
-        
-        // Настройки навигации кнопками
-        navigation: {
-            nextEl: '.certs-slider__btn--next',
-            prevEl: '.certs-slider__btn--prev',
-        },
-
-        // Адаптивная сетка количества слайдов
-        breakpoints: {
-            // Экран от 320px до 767px (мобилки)
-            320: {
-                slidesPerView: 1,
-                spaceBetween: 15
-            },
-            // Экран от 768px до 1199px (планшеты)
-            768: {
-                slidesPerView: 2,
-                spaceBetween: 25
-            },
-            // Экран от 1200px (десктоп, как на макете)
-            1200: {
-                slidesPerView: 3,
-                spaceBetween: 35
-            }
-        }
-    });
-
-    // 2. Логика До/После
-    const compareSliders = document.querySelectorAll('.compare__slider');
-
-    compareSliders.forEach(slider => {
-        slider.addEventListener('input', (e) => {
-            const value = e.target.value;
-            const container = slider.closest('.compare');
-            const beforeImg = container.querySelector('.compare__before');
-            const handle = container.querySelector('.compare__handle');
-
-            // Обновляем clip-path верхнего фото
-            beforeImg.style.clipPath = `inset(0 ${100 - value}% 0 0)`;
-            // Двигаем линию разделителя
-            handle.style.left = `${value}%`;
-        });
-    });
-
-    // --- ЛОГИКА ФОРМЫ В СЕКЦИИ INVENTORY ---
+    // ==========================================
+    // ЛОГИКА ФОРМЫ В СЕКЦИИ INVENTORY
+    // ==========================================
     const inventoryForm = document.querySelector('.inventory__form');
     if (inventoryForm) {
         const invPhoneInput = inventoryForm.querySelector('.form-capture__input');
         const invConsentCheckbox = inventoryForm.querySelector('.checkbox__input');
         const invSubmitBtn = inventoryForm.querySelector('.form-capture__btn');
-        
-        // Объект для отслеживания взаимодействия (чтобы не пугать ошибками сразу)
         const invTouched = { phone: false, consent: false };
 
         function validateInventoryForm() {
-            // Очищаем от не-цифр и проверяем длину (11 цифр для РФ)
             const cleanPhone = invPhoneInput.value.replace(/\D/g, "");
             const isPhoneValid = cleanPhone.length === 11;
             const isConsentValid = invConsentCheckbox.checked;
 
-            // Кастомный вывод ошибок для структуры формы инвентаря
             const fieldGroup = invPhoneInput.closest('.form-capture__field');
             if (fieldGroup) {
                 if (!isPhoneValid && invTouched.phone) {
@@ -373,40 +365,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            // Кнопка становится активной только при полной валидности
+            const checkboxGroup = invConsentCheckbox.closest('.checkbox');
+            if (checkboxGroup) {
+                if (!isConsentValid && invTouched.consent) {
+                    checkboxGroup.classList.add('form__checkbox-label--error');
+                } else {
+                    checkboxGroup.classList.remove('form__checkbox-label--error');
+                }
+            }
+            
             const isValid = isPhoneValid && isConsentValid;
             invSubmitBtn.disabled = !isValid;
 
             return isValid;
         }
 
-        // Слушатель на потерю фокуса (blur), чтобы пометить поле как "тронутое"
-        invPhoneInput.addEventListener('blur', () => { 
-            invTouched.phone = true; 
-            validateInventoryForm(); 
-        });
+        invPhoneInput.addEventListener('blur', () => { invTouched.phone = true; validateInventoryForm(); });
+        invConsentCheckbox.addEventListener('change', () => { invTouched.consent = true; validateInventoryForm(); });
 
-        // Слушатель на чекбокс
-        invConsentCheckbox.addEventListener('change', () => { 
-            invTouched.consent = true; 
-            validateInventoryForm(); 
-        });
-
-        // Живая валидация при вводе
         inventoryForm.addEventListener('input', (e) => {
-            if (e.target === invPhoneInput) {
-                applyPhoneMask(e.target); // Применяем твою маску
-            }
+            if (e.target === invPhoneInput) applyPhoneMask(e.target);
             validateInventoryForm();
         });
 
-        // Обработка отправки формы
         inventoryForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Останавливаем перезагрузку страницы
-
+            e.preventDefault();
             if (!validateInventoryForm()) return;
 
-            // Находим целевую модалку по атрибуту кнопки
             const targetModalId = invSubmitBtn.getAttribute('data-modal-target'); 
             const targetModal = document.querySelector(targetModalId);
 
@@ -419,9 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const serviceInput = targetModal.querySelector('[name="service_name"]');
 
                 if (modalTitle) modalTitle.textContent = serviceTitle;
-                if (serviceInput) {
-                    serviceInput.value = serviceTitle;
-                }
+                if (serviceInput) serviceInput.value = serviceTitle;
 
                 if (formWrapper) formWrapper.style.display = 'block';
                 if (successBlock) successBlock.classList.remove('modal__success--active');
@@ -429,7 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetModal.classList.add('modal--active');
                 document.body.style.overflow = 'hidden';
 
-                // Сбрасываем форму инвентаря после вызова модалки
                 invTouched.phone = false;
                 invTouched.consent = false;
                 inventoryForm.reset();
@@ -437,18 +419,134 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Инициализация начального состояния кнопки (выключаем её сразу)
         validateInventoryForm();
     }
 
+    // ==========================================
+    // УТИЛИТЫ (МАСКА И ОШИБКИ)
+    // ==========================================
+    function applyPhoneMask(input) {
+        const matrix = "+7 (___) ___-__-__";
+        let i = 0;
+        const def = matrix.replace(/\D/g, "");
+        let val = input.value.replace(/\D/g, "");
+        
+        if (def.length >= val.length) val = def;
+        
+        input.value = matrix.replace(/./g, function(a) {
+            return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a;
+        });
+    }
 
-    //==============КНОПКА ВВЕРХ=================
+    function toggleError(input, message, isError) {
+        const group = input.closest('.form__group') || 
+                      input.closest('.form__checkbox-label') || 
+                      input.closest('.form-capture__field') || 
+                      input.closest('.checkbox') || 
+                      input.closest('.calc-banner__group');
+                      
+        if (!group) return;
+
+        const errorClass = input.type === 'checkbox' ? 'form__checkbox-label--error' : 'form__group--error';
+        
+        if (isError) {
+            group.classList.add(errorClass);
+            if (input.type !== 'checkbox') {
+                let errorSpan = group.querySelector('.form__error');
+                if (!errorSpan) {
+                    errorSpan = document.createElement('span');
+                    errorSpan.className = 'form__error';
+                    group.appendChild(errorSpan);
+                }
+                errorSpan.textContent = message;
+            }
+        } else {
+            group.classList.remove(errorClass);
+            if (input.type !== 'checkbox') {
+                const errorText = group.querySelector('.form__error');
+                if (errorText && errorText.textContent !== "") errorText.textContent = "";
+            }
+        }
+    }
+
+    // ==========================================
+    // ПЕРЕКЛЮЧАТЕЛЬ ТАБОВ
+    // ==========================================
+    const tabBtns = document.querySelectorAll('.tabs__btn');
+    const tabPanes = document.querySelectorAll('.tabs__pane');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-tab');
+
+            tabBtns.forEach(b => b.classList.remove('tabs__btn--active'));
+            tabPanes.forEach(p => p.classList.remove('tabs__pane--active'));
+
+            btn.classList.add('tabs__btn--active');
+            const targetPane = document.getElementById(target);
+            if (targetPane) targetPane.classList.add('tabs__pane--active');
+        });
+    });
+
+    // ==========================================
+    // СЛАЙДЕРЫ И ДО/ПОСЛЕ
+    // ==========================================
+    const swiper = new Swiper('.cases-slider', {
+        autoHeight: false, 
+        speed: 800,
+        grabCursor: true,
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.cases-slider__btn--next',
+            prevEl: '.cases-slider__btn--prev',
+        },
+        breakpoints: {
+            320: { spaceBetween: 10 },
+            768: { spaceBetween: 20 },
+            1200: { spaceBetween: 30 }
+        }
+    });
+
+    const certsSwiper = new Swiper('.certs-slider', {
+        speed: 600,
+        grabCursor: true,
+        loop: true, 
+        navigation: {
+            nextEl: '.certs-slider__btn--next',
+            prevEl: '.certs-slider__btn--prev',
+        },
+        breakpoints: {
+            320: { slidesPerView: 1, spaceBetween: 15 },
+            768: { slidesPerView: 2, spaceBetween: 25 },
+            1200: { slidesPerView: 3, spaceBetween: 35 }
+        }
+    });
+
+    const compareSliders = document.querySelectorAll('.compare__slider');
+    compareSliders.forEach(slider => {
+        slider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            const container = slider.closest('.compare');
+            const beforeImg = container.querySelector('.compare__before');
+            const handle = container.querySelector('.compare__handle');
+
+            if (beforeImg) beforeImg.style.clipPath = `inset(0 ${100 - value}% 0 0)`;
+            if (handle) handle.style.left = `${value}%`;
+        });
+    });
+
+    // ==========================================
+    // КНОПКА ВВЕРХ
+    // ==========================================
     const backToTopBtn = document.getElementById('backToTop');
-
     if (backToTopBtn) {
-        // 1. Отслеживаем прокрутку страницы
         window.addEventListener('scroll', () => {
-            // Если пролистали больше 400 пикселей, добавляем класс показа
             if (window.scrollY > 400) {
                 backToTopBtn.classList.add('back-to-top--show');
             } else {
@@ -456,12 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 2. Обрабатываем клик по кнопке
         backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth' // Плавный скролл наверх
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 });
