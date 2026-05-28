@@ -11,6 +11,11 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        policy: resolve(__dirname, 'policy.html'),
+        rekvizits: resolve(__dirname, 'rekvizits.html'),
+      },
       output: {
         // Убираем хэши из названий JS и CSS файлов
         entryFileNames: 'assets/[name].js',
