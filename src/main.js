@@ -2,6 +2,7 @@ import './scss/main.scss';
 import Swiper from 'swiper/bundle';
 import 'swiper/css/bundle';
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('calcModal');
     
@@ -82,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formWrapper.style.display = 'block';
                 successBlock.classList.remove('modal__success--active');
                 modal.classList.add('modal--active');
-                document.body.style.overflow = 'hidden';
+               document.body.classList.add('modal-open');
                 
                 // Сброс состояния ошибок при новом открытии
                 Object.keys(touched).forEach(key => touched[key] = false);
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const closeAll = () => {
             modal.classList.remove('modal--active');
-            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
         };
 
         [overlay, closeBtn].forEach(el => el?.addEventListener('click', closeAll));
@@ -619,4 +620,6 @@ compares.forEach(container => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
+
+
 });
